@@ -24,7 +24,7 @@ This library exports a `createTheme` utility to create a [spec-compliant](#theme
   - [How it works](#how-it-works)
   - [Differences with `theme-ui`](#differences-with-theme-ui)
 - [Theme](#theme)
-  - [Theme spec keys](#theme-spec-keys)
+  - [Theme values](#theme-values)
   - [Breakpoints](#breakpoints)
   - [HTML elements](#html-elements)
   - [Example](#example)
@@ -344,7 +344,7 @@ const evaluatedStyle = {
 The `Theme` object provides relevant data for a theme provider implementor to resolve theme values based on the mappings specified in the [Theme Specification](#theme-specification).
 
 The `Theme` object has three main structural parts:
-- [Theme spec keys](#theme-spec-keys)
+- [Theme values](#theme-values)
 - [Breakpoints](#breakpoints)
 - [HTML elements](#html-elements)
 
@@ -352,7 +352,7 @@ All keys need to exist on the `Theme` object for it to be well-formed.
 
 ```js
 const defaultTheme = {
-  // themeSpec keys
+  // theme values
   animations: {},
   borders: {},
   borderStyles: {},
@@ -378,9 +378,9 @@ const defaultTheme = {
 };
 ```
 
-### Theme spec keys
+### Theme values
 
-`Theme` spec keys are assigned to arbitrarily nested objects that terminate with CSS values:
+`Theme` values are assigned as nested objects terminating with CSS values:
 
 ```js
 const theme = {
@@ -460,7 +460,7 @@ const evaluatedStyle = {
 
 ### Breakpoints
 
-The `breakpoints` structure is an object that holds media query breakpoints.  Defining `breakpoints` allows support for defining [Theme Spec keys](#theme-spec-keys) in array-form, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
+The `breakpoints` structure is an object that holds media query breakpoints.  Defining `breakpoints` allows support for defining [Theme values](#theme-values) in array-form, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
 
 ```js
 const theme = {
@@ -484,7 +484,7 @@ const theme = {
 
 The `htmlElements` structure is not involved with the `Theme` definition, but it provides a static source of truth on how theme values are applied on HTML elements.  This can be useful when applied on staic global stylesheets.
 
-The keys of `htmlElements` should be valid HTML element names, and the values should be objects conforming to typical CSS style defintions.  A useful feature is to assign theme values instead of hardcoded CSS values to the element styles.
+The keys of `htmlElements` should be valid HTML element names, and the values should be objects conforming to typical CSS style defintions.  A useful feature is to assign the key of theme values instead of hardcoded CSS values to the element styles.
 
 ```js
 const theme = {
