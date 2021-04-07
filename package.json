@@ -1,0 +1,57 @@
+{
+  "name": "uinix-theme",
+  "version": "0.1.0",
+  "description": "Theme spec and utilties for building UIs with uinix",
+  "license": "MIT",
+  "keywords": [
+    "uinix",
+    "theme",
+    "spec",
+    "design system"
+  ],
+  "repository": "uinix-js/uinix-theme",
+  "bugs": "https://github.com/uinix-js/uinix-theme/issues",
+  "author": "Chris Zhou <chrisrzhou@pm.me> (https://chrisrzhou.io)",
+  "type": "module",
+  "files": [
+    "lib/",
+    "index.js",
+    "index.d.js"
+  ],
+  "main": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "uinix-fp": "github:uinix-js/uinix-fp"
+  },
+  "devDependencies": {
+    "c8": "^7.7.0",
+    "tape": "^5.2.2",
+    "xo": "^0.38.2"
+  },
+  "scripts": {
+    "format": "xo --fix",
+    "test-coverage": "c8 --check-coverage --lines 100 --functions 100 --branches 100 --reporter lcov node test/index.js",
+    "test": "npm run format && npm run test-coverage"
+  },
+  "engines": {
+    "node": ">=12.17.0"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "xo": {
+    "prettier": true,
+    "esnext": false,
+    "rules": {
+      "capitalized-comments": "off",
+      "padding-line-between-statements": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-array-for-each": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-spread": "off"
+    }
+  }
+}
