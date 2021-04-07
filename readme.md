@@ -482,7 +482,7 @@ const theme = {
 
 ### HTML elements
 
-The `htmlElements` structure is not involved with the `Theme` definition, but it provides a static source of truth on how theme values are applied on HTML elements.  This can be useful when applied on staic global stylesheets.
+The `htmlElements` structure is not involved with the `Theme` definition, but it provides a static source of truth on how theme values are applied on HTML elements.  This can be useful when using with static global stylesheets.
 
 The keys of `htmlElements` should be valid HTML element names, and the values should be objects conforming to typical CSS style defintions.  A useful feature is to assign the key of theme values instead of hardcoded CSS values to the element styles.
 
