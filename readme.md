@@ -26,7 +26,7 @@ This library exports a `createTheme` utility to create a [spec-compliant](#theme
 - [Theme](#theme)
   - [Theme values](#theme-values)
   - [Breakpoints](#breakpoints)
-  - [HTML elements](#html-elements)
+  - [Styles](#styles)
   - [Example](#example)
 - [Theme Providers](#theme-providers)
 - [Related](#related)
@@ -46,7 +46,7 @@ npm install github:uinix-js/uninix-theme
 Use `createTheme` with an optional `overrideTheme` parameter to create a compliant [`Theme`](#theme).  The following example shows how to configure some theme properties (e.g. `breakpoints`, `colors`, `spacings`, `sizes`, `transitions`).
 
 ```js
-import { createTheme, themeSpec } from 'uinix-theme';
+import { createTheme } from 'uinix-theme';
 
 const overrideTheme = {
   breakpoints: {
@@ -330,14 +330,12 @@ const evaluatedStyle = {
 | --- | --- | --- |
 | `animations` | no | yes |
 | `keyframes` | no | yes |
-| `htmlElements` | no (see `styles`) | yes |
 | `spacings` | no (see `space`) | yes |
 | `space` | yes | no (see `spacings`) |
-| `styles` | yes | no (see `htmlElements`) |
 | `variants` | yes | no* |
 | `colors.modes` | yes | no* |
 
-> *The `uinix-theme` theme spec is more strict, and delegates such features to upstream consumers.
+> *The `uinix-theme` theme spec is more restrictive, and delegates these features to upstream consumers.
 
 ## Theme
 
@@ -346,9 +344,9 @@ The `Theme` object provides relevant data for a theme provider implementor to re
 The `Theme` object has three main structural parts:
 - [Theme values](#theme-values)
 - [Breakpoints](#breakpoints)
-- [HTML elements](#html-elements)
+- [Styles](#styles)
 
-All keys need to exist on the `Theme` object for it to be well-formed.
+The following keys need to exist on the `Theme` object for it to be well-formed.
 
 ```js
 const defaultTheme = {
@@ -373,14 +371,14 @@ const defaultTheme = {
   zIndices: {},
   // breakpoints
   breakpoints: {},
-  // html elements
-  htmlElements: {},
+  // styles
+  styles: {},
 };
 ```
 
 ### Theme values
 
-`Theme` values are assigned as nested objects terminating with CSS values:
+`Theme` values are assigned as nested objects and are termianted with CSS values:
 
 ```js
 const theme = {
@@ -406,6 +404,7 @@ const theme = {
     all: 'all 0.3s ease-in-out',
     allSlow: 'all 2s ease-in-out',
   },
+  // all other required keys
 };
 ```
 
@@ -438,7 +437,7 @@ const theme = {
 };
 ```
 
-Theme values can be consumed in providers implementing `uinix-theme` e.g.
+Theme values can be consumed in providers implementing the `uinix-theme` theme spec.  For example, a provider should evaluate the following themed style appropriately:
 
 ```js
 const themedStyle = {
@@ -460,7 +459,7 @@ const evaluatedStyle = {
 
 ### Breakpoints
 
-The `breakpoints` structure is an object that holds media query breakpoints.  Defining `breakpoints` allows support for defining [Theme values](#theme-values) in array-form, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
+The `breakpoints` structure is an object that holds media query breakpoints.  Defining `breakpoints` enables defining responsive [Theme values](#theme-values) as an array, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
 
 ```js
 const theme = {
@@ -480,17 +479,18 @@ const theme = {
 };
 ```
 
-### HTML elements
+### Styles
 
-The `htmlElements` structure is not involved with the `Theme` definition, but it provides a static source of truth on how theme values are applied on HTML elements.  This can be useful when using with static global stylesheets.
+The `styles` structure does not participate in defining the `Theme` object, but is a direct and immediate consumer of the `Theme` object.  It provides a single point of entry for defining theme-based styles for elements and CSS selectors.  A theme provider can apply `theme.styles` in a global static stylesheet, allowing access too theme-based stylings to extended applications.
 
-The keys of `htmlElements` should be valid HTML element names, and the values should be objects conforming to typical CSS style defintions.  A useful feature is to assign the key of theme values instead of hardcoded CSS values to the element styles.
+The keys of `styles` should be valid HTML elements or CSS selectors, and the values should be objects conforming to standard CSS style defintions.
 
 ```js
 const theme = {
   colors: {
     palette: {
-      red0: '100px', // WRONG: this value is invalid for CSS properties in themeSpec.colors
+      red0: '#330000',
+      red1: '#ff0000',
     },
     brand: {
       primary: 'blue',
@@ -507,8 +507,7 @@ const theme = {
     l: 24,
     xl: 48,
   },
-  // all other required keys
-  htmlElements: {
+  styles: {
     body: { // the <body /> HTML element
       fontFamily: 'body', // themeSpec.fonts theme value
       fontSize: 'm' // themeSpec.fontSizes theme value
@@ -519,18 +518,22 @@ const theme = {
     },
     ...
     a: {
-      color: 'brand.primary',
+      color: 'brand.primary', // themeSpec.colors theme value
       ':hover': { // pseudo-selectors supported
         color: 'brand.active'
       },
     },
+    '.resizer': { // custom CSS classnames.  useful to override vendor styles with theme values
+      borderColor: 'brand.primary',
+    },
   },
+  // all other required keys
 };
 ```
 
 ### Example
 
-The following provides an example of styling a responsive `Card` component using a custom `Theme`.  We will skip details on the implementation of the `css` utility that resolves themed styles into vanilla CSS, but we recommend checking out the [`uinix-ui`][uinix-ui] project for an example implementation of a theme `Provider`.
+The following provides an example of styling a responsive `Card` component using a custom `Theme`.  We will skip details on the implementation of the `css` utility that resolves themed styles into CSS values, but we recommend checking out the [`uinix-ui`][uinix-ui] project for an example implementation of a theme `Provider`.
 
 ```jsx
 const theme = {
@@ -564,8 +567,7 @@ const theme = {
     m: 16,
     l: 32,
   },
-  // other required keys
-  htmlElements: {
+  styles: {
     body: {
       fontFamily: 'body',
       fontSize: 's',
@@ -575,9 +577,11 @@ const theme = {
       fontSize: 'xl'
     },
   },
+  // other required keys
 };
 
-// pseudocode to demonstrate registering the theme with a provider to process themed styles
+// pseudocode demonstrating registering a theme to a provider,
+// and having a utility to transform themed styles into evaluated styles
 import { css, provider } from 'custom-theme-provider';
 provider.register(theme);
 
@@ -591,7 +595,7 @@ const Card = ({ contents, title }) => {
           paddingRight: 'l',
           paddingTop: 's',
         })}>
-        <h2>{title}</h2> // styled via theme.htmlElements.h2
+        <h2>{title}</h2> // styled via theme.styles.h2
         <div
           className={css({ // styled via theme.sizes and theme.colors
             color: 'palette.gray3',
@@ -608,7 +612,7 @@ const Card = ({ contents, title }) => {
           paddingRight: ['m', 'm', 'l'],
           paddingTop: ['s', 's', 'm'],
         })}>
-        {contents} // styled via theme.htmlElements.body
+        {contents} // styled via theme.styles.body
       </div>
     </div>
   );

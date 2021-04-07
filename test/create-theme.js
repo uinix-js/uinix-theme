@@ -23,7 +23,7 @@ test('createTheme', (t) => {
     spacings: {},
     transitions: {},
     zIndices: {},
-    htmlElements: {},
+    styles: {},
   };
 
   const overrideTheme = {
@@ -66,16 +66,19 @@ test('createTheme', (t) => {
         l: 32,
       },
     },
-    htmlElements: {
+    styles: {
       h1: {
         fontFamily: 'heading',
         fontSize: 'xl',
       },
       a: {
         color: 'brand.primary',
+        ':hover': {
+          color: 'brand.active',
+        },
       },
-      'a:hover': {
-        color: 'brand.active',
+      '.resizer': {
+        color: 'brand.primary',
       },
     },
   };

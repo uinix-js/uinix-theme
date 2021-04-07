@@ -1,6 +1,6 @@
 export { Theme, ThemeSpec, createTheme };
 
-function createTheme(themeOverride: Optional<Theme>): Theme;
+declare function createTheme(themeOverride: Optional<Theme>): Theme;
 
 interface Theme {
   animations: ThemePropertyValue;
@@ -22,7 +22,7 @@ interface Theme {
   transitions: ThemePropertyValue;
   zIndices: ThemePropertyValue;
   breakpoints: ThemePropertyValue;
-  elements: ThemePropertyValue;
+  styles: ThemePropertyValue;
 }
 
 interface ThemeSpec {
@@ -52,13 +52,11 @@ type Optional<T> = {
 
 type CssProperties = string[];
 
-type ThemePropertyValue = Record<string, ThemeValue>;
+type ThemePropertyValue = Record<
+  string,
+  ThemeValue | ThemeResponsiveValue | Record<string, unknown>
+>; // TODO: figure how to recursively type this
 
-type ThemeValue =
-  | ThemePropertyValue
-  | ThemeResponsiveValue
-  | ThemePrimitiveValue;
+type ThemeResponsiveValue = ThemeValue[];
 
-type ThemeResponsiveValue = ThemePrimitiveValue[];
-
-type ThemePrimitiveValue = string | number;
+type ThemeValue = string | number; // a valid CSS property value
