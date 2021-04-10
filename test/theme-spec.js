@@ -138,6 +138,7 @@ test('createTheme', (t) => {
       'columnGap',
       'rowGap',
     ],
+    transforms: ['transform'],
     transitions: ['transition'],
     zIndices: ['zIndex'],
   };

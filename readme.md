@@ -11,6 +11,8 @@ Theme spec and utilities for building UIs with [uinix][uinix].
 
 ## Intro
 
+> This project is a work in progress and documentation is subject to change.
+
 This library exports a `createTheme` utility to create a [spec-compliant](#theme-specification) [`Theme`](#theme) object.  The [`Theme`](#theme) object centralizes and provides a foundation for building and composing UI components and programs in the [`uinix`][uinix] ecosystem.
 
 ## Contents
@@ -272,6 +274,7 @@ const themeSpec = {
     'columnGap',
     'rowGap',
   ],
+  transforms: ['transform'],
   transitions: ['transition'],
   zIndices: ['zIndex'],
 };
@@ -326,16 +329,16 @@ const evaluatedStyle = {
 ### Differences with `theme-ui`
 [`theme-ui`][theme-ui] pioneered and formalized the notion of theme-driven UI development.  The following highlights small differences between the two specs as of the time of this writing (April 2021):
 
-| Theme key | `theme-ui` | `uinix-theme` |
+| Theme key | `uinix-theme` | `theme-ui` |
 | --- | --- | --- |
-| `animations` | no | yes |
-| `keyframes` | no | yes |
-| `spacings` | no (see `space`) | yes |
-| `space` | yes | no (see `spacings`) |
-| `variants` | yes | no* |
-| `colors.modes` | yes | no* |
+| `animations` | yes | no |
+| `keyframes` | yes | no |
+| `spacings` | yes | no (see `space`) |
+| `space` | no (see `spacings`) | yes |
+| `variants` | no* | yes |
+| `colors.modes` | no* | yes |
 
-> *The `uinix-theme` theme spec is more restrictive, and delegates these features to upstream consumers.
+> *The `uinix-theme` theme spec is more restrictive, and is only concerned with defining the spec between theme properties and CSS properties.
 
 ## Theme
 
@@ -367,6 +370,7 @@ const defaultTheme = {
   shadows: {},
   sizes: {},
   spacings: {},
+  transforms: {},
   transitions: {},
   zIndices: {},
   // breakpoints

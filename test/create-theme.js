@@ -21,6 +21,7 @@ test('createTheme', (t) => {
     shadows: {},
     sizes: {},
     spacings: {},
+    transforms: {},
     transitions: {},
     zIndices: {},
     styles: {},
