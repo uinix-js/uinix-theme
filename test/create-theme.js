@@ -28,7 +28,7 @@ test('createTheme', (t) => {
 
   const overrideTheme = {
     breakpoints: {
-      phone: '@media (min-width: 400px)',
+      phone: '400px',
     },
     colors: {
       palette: {

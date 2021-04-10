@@ -50,8 +50,8 @@ import { createTheme } from 'uinix-theme';
 
 const overrideTheme = {
   breakpoints: {
-    phone: '@media only screen and (min-device-width: 320px)',
-    laptops: '@media only screen and (min-device-width: 1200px)',
+    phone: '320px',
+    laptops: '1200px',
   },
   borders: {
     s: 2,
@@ -459,13 +459,13 @@ const evaluatedStyle = {
 
 ### Breakpoints
 
-The `breakpoints` structure is an object that holds media query breakpoints.  Defining `breakpoints` enables defining responsive [Theme values](#theme-values) as an array, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
+The `breakpoints` structure is an object that defines `min-width`-based media query breakpoints.  These values have to be defined as valid CSS width values and must be of type `'string'`.  Defining `breakpoints` enables defining responsive [Theme values](#theme-values) as an array, a pattern pioneered and popularized by [theme-ui][theme-ui-responsive-styles].
 
 ```js
 const theme = {
   breakpoints: {
-    phone: '@media only screen and (min-device-width: 320px)',
-    laptops: '@media only screen and (min-device-width: 1200px)',
+    phone: '320px',
+    laptops: '1200px',
   },
   sizes: {
     container: ['100%', 768],
@@ -538,8 +538,8 @@ The following provides an example of styling a responsive `Card` component using
 ```jsx
 const theme = {
   breakpoints: {
-    phone: '@media only screen and (min-device-width: 320px)',
-    laptops: '@media only screen and (min-device-width: 1200px)',
+    phone: '320px',
+    laptops: '1200px',
   },
   colors: {
     palette: {
