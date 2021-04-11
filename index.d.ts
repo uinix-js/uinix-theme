@@ -3,60 +3,61 @@ export { Theme, ThemeSpec, createTheme };
 declare function createTheme(themeOverride: Optional<Theme>): Theme;
 
 interface Theme {
-  animations: ThemePropertyValue;
-  borders: ThemePropertyValue;
-  borderStyles: ThemePropertyValue;
-  borderWidths: ThemePropertyValue;
-  colors: ThemePropertyValue;
-  fonts: ThemePropertyValue;
-  fontSizes: ThemePropertyValue;
-  fontWeights: ThemePropertyValue;
-  keyframes: ThemePropertyValue;
-  letterSpacings: ThemePropertyValue;
-  lineHeights: ThemePropertyValue;
-  opacities: ThemePropertyValue;
-  radii: ThemePropertyValue;
-  shadows: ThemePropertyValue;
-  sizes: ThemePropertyValue;
-  spacings: ThemePropertyValue;
-  transitions: ThemePropertyValue;
-  zIndices: ThemePropertyValue;
-  breakpoints: ThemePropertyValue;
-  styles: ThemePropertyValue;
+  animations: ThemeValue;
+  borders: ThemeValue;
+  borderStyles: ThemeValue;
+  borderWidths: ThemeValue;
+  colors: ThemeValue;
+  fonts: ThemeValue;
+  fontSizes: ThemeValue;
+  fontWeights: ThemeValue;
+  keyframes: ThemeValue;
+  letterSpacings: ThemeValue;
+  lineHeights: ThemeValue;
+  opacities: ThemeValue;
+  radii: ThemeValue;
+  shadows: ThemeValue;
+  sizes: ThemeValue;
+  spacings: ThemeValue;
+  transitions: ThemeValue;
+  zIndices: ThemeValue;
+  breakpoints: ThemeValue;
+  styles: ThemeValue;
 }
 
 interface ThemeSpec {
-  animations: CssProperties;
-  borders: CssProperties;
-  borderStyles: CssProperties;
-  borderWidths: CssProperties;
-  colors: CssProperties;
-  fonts: CssProperties;
-  fontSizes: CssProperties;
-  fontWeights: CssProperties;
-  keyframes: CssProperties;
-  letterSpacings: CssProperties;
-  lineHeights: CssProperties;
-  opacities: CssProperties;
-  radii: CssProperties;
-  shadows: CssProperties;
-  sizes: CssProperties;
-  spacings: CssProperties;
-  transitions: CssProperties;
-  zIndices: CssProperties;
+  animations: CssProperty[];
+  borders: CssProperty[];
+  borderStyles: CssProperty[];
+  borderWidths: CssProperty[];
+  colors: CssProperty[];
+  fonts: CssProperty[];
+  fontSizes: CssProperty[];
+  fontWeights: CssProperty[];
+  keyframes: CssProperty[];
+  letterSpacings: CssProperty[];
+  lineHeights: CssProperty[];
+  opacities: CssProperty[];
+  radii: CssProperty[];
+  shadows: CssProperty[];
+  sizes: CssProperty[];
+  spacings: CssProperty[];
+  transitions: CssProperty[];
+  zIndices: CssProperty[];
 }
 
 type Optional<T> = {
   [P in keyof T]?: T[P];
 };
 
-type CssProperties = string[];
+type CssProperty = string;
 
-type ThemePropertyValue = Record<
+// TODO: figure how to recursively type this
+type ThemeValue = Record<
   string,
-  ThemeValue | ThemeResponsiveValue | Record<string, unknown>
->; // TODO: figure how to recursively type this
+  CssValue | ResponsiveThemeValue | Record<string, unknown>
+>;
 
-type ThemeResponsiveValue = ThemeValue[];
+type ResponsiveThemeValue = CssValue[];
 
-type ThemeValue = string | number; // a valid CSS property value
+type CssValue = string | number; // a valid CSS property value

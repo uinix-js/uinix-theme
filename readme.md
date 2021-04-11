@@ -28,7 +28,6 @@ This library exports a `createTheme` utility to create a [spec-compliant](#theme
 - [Theme](#theme)
   - [Theme values](#theme-values)
   - [Breakpoints](#breakpoints)
-  - [Styles](#styles)
   - [Example](#example)
 - [Theme Providers](#theme-providers)
 - [Related](#related)
@@ -344,10 +343,9 @@ const evaluatedStyle = {
 
 The `Theme` object provides relevant data for a theme provider implementor to resolve theme values based on the mappings specified in the [Theme Specification](#theme-specification).
 
-The `Theme` object has three main structural parts:
+The `Theme` object has two main structural parts:
 - [Theme values](#theme-values)
 - [Breakpoints](#breakpoints)
-- [Styles](#styles)
 
 The following keys need to exist on the `Theme` object for it to be well-formed.
 
@@ -375,8 +373,6 @@ const defaultTheme = {
   zIndices: {},
   // breakpoints
   breakpoints: {},
-  // styles
-  styles: {},
 };
 ```
 
@@ -483,58 +479,6 @@ const theme = {
 };
 ```
 
-### Styles
-
-The `styles` structure does not participate in defining the `Theme` object, but is a direct and immediate consumer of the `Theme` object.  It provides a single point of entry for defining theme-based styles for elements and CSS selectors.  A theme provider can apply `theme.styles` in a global static stylesheet, allowing access too theme-based stylings to extended applications.
-
-The keys of `styles` should be valid HTML elements or CSS selectors, and the values should be objects conforming to standard CSS style defintions.
-
-```js
-const theme = {
-  colors: {
-    palette: {
-      red0: '#330000',
-      red1: '#ff0000',
-    },
-    brand: {
-      primary: 'blue',
-      active: 'purple',
-    },
-  },
-  fonts: {
-    body: 'system-ui',
-    heading: 'impact',
-  },
-  fontSizes: {
-    s: 12,
-    m: 16,
-    l: 24,
-    xl: 48,
-  },
-  styles: {
-    body: { // the <body /> HTML element
-      fontFamily: 'body', // themeSpec.fonts theme value
-      fontSize: 'm' // themeSpec.fontSizes theme value
-    },
-    h1: {
-      fontFamily: 'heading',
-      fontSize: 'xl',
-    },
-    ...
-    a: {
-      color: 'brand.primary', // themeSpec.colors theme value
-      ':hover': { // pseudo-selectors supported
-        color: 'brand.active'
-      },
-    },
-    '.resizer': { // custom CSS classnames.  useful to override vendor styles with theme values
-      borderColor: 'brand.primary',
-    },
-  },
-  // all other required keys
-};
-```
-
 ### Example
 
 The following provides an example of styling a responsive `Card` component using a custom `Theme`.  We will skip details on the implementation of the `css` utility that resolves themed styles into CSS values, but we recommend checking out the [`uinix-ui`][uinix-ui] project for an example implementation of a theme `Provider`.
@@ -571,16 +515,6 @@ const theme = {
     m: 16,
     l: 32,
   },
-  styles: {
-    body: {
-      fontFamily: 'body',
-      fontSize: 's',
-    },
-    h2: {
-      fontFamily: 'impact',
-      fontSize: 'xl'
-    },
-  },
   // other required keys
 };
 
@@ -599,7 +533,7 @@ const Card = ({ contents, title }) => {
           paddingRight: 'l',
           paddingTop: 's',
         })}>
-        <h2>{title}</h2> // styled via theme.styles.h2
+        <h2>{title}</h2>
         <div
           className={css({ // styled via theme.sizes and theme.colors
             color: 'palette.gray3',
@@ -616,7 +550,7 @@ const Card = ({ contents, title }) => {
           paddingRight: ['m', 'm', 'l'],
           paddingTop: ['s', 's', 'm'],
         })}>
-        {contents} // styled via theme.styles.body
+        {contents}
       </div>
     </div>
   );

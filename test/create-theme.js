@@ -24,7 +24,6 @@ test('createTheme', (t) => {
     transforms: {},
     transitions: {},
     zIndices: {},
-    styles: {},
   };
 
   const overrideTheme = {
@@ -65,21 +64,6 @@ test('createTheme', (t) => {
         s: 16,
         m: 24,
         l: 32,
-      },
-    },
-    styles: {
-      h1: {
-        fontFamily: 'heading',
-        fontSize: 'xl',
-      },
-      a: {
-        color: 'brand.primary',
-        ':hover': {
-          color: 'brand.active',
-        },
-      },
-      '.resizer': {
-        color: 'brand.primary',
       },
     },
   };
