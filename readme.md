@@ -334,10 +334,11 @@ const evaluatedStyle = {
 | `keyframes` | yes | no |
 | `spacings` | yes | no (see `space`) |
 | `space` | no (see `spacings`) | yes |
+| `styles` | no* | yes |
 | `variants` | no* | yes |
 | `colors.modes` | no* | yes |
 
-> *The `uinix-theme` theme spec is more restrictive, and is only concerned with defining the spec between theme properties and CSS properties.
+> *The `uinix-theme` theme spec is more strict, and only deals with mappings between theme properties and CSS properties.  These features are therefore implemented in upstream providers (e.g. [`uinix-ui`][uinix-ui]).
 
 ## Theme
 

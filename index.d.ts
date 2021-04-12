@@ -22,7 +22,6 @@ interface Theme {
   transitions: ThemeValue;
   zIndices: ThemeValue;
   breakpoints: ThemeValue;
-  styles: ThemeValue;
 }
 
 interface ThemeSpec {
