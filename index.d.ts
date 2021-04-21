@@ -8,7 +8,7 @@ interface Theme {
   borderStyles: ThemeValue;
   borderWidths: ThemeValue;
   colors: ThemeValue;
-  fonts: ThemeValue;
+  fontFamilies: ThemeValue;
   fontSizes: ThemeValue;
   fontWeights: ThemeValue;
   keyframes: ThemeValue;
@@ -22,6 +22,7 @@ interface Theme {
   transitions: ThemeValue;
   zIndices: ThemeValue;
   breakpoints: ThemeValue;
+  fontFaces: ThemeValue;
 }
 
 interface ThemeSpec {
@@ -30,7 +31,7 @@ interface ThemeSpec {
   borderStyles: CssProperty[];
   borderWidths: CssProperty[];
   colors: CssProperty[];
-  fonts: CssProperty[];
+  fontFamilies: CssProperty[];
   fontSizes: CssProperty[];
   fontWeights: CssProperty[];
   keyframes: CssProperty[];

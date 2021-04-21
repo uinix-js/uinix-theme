@@ -48,7 +48,7 @@ test('createTheme', (t) => {
         active: 'purple',
       },
     },
-    fonts: {
+    fontFamilies: {
       body: 'arial',
       heading: 'impact',
     },
