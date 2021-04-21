@@ -28,6 +28,7 @@ This library exports a `createTheme` utility to create a [spec-compliant](#theme
 - [Theme](#theme)
   - [Theme values](#theme-values)
   - [Breakpoints](#breakpoints)
+  - [Font faces](#font-faces)
   - [Example](#example)
 - [Theme Providers](#theme-providers)
 - [Related](#related)
@@ -73,7 +74,7 @@ const overrideTheme = {
       // ...
     },
   },
-  fonts: {
+  fontFamilies: {
     body: 'system-ui',
     heading: 'impact',
   },
@@ -193,7 +194,7 @@ const themeSpec = {
     'fill',
     'stroke',
   ],
-  fonts: ['fontFamily'],
+  fontFamilies: ['fontFamily'],
   fontSizes: ['fontSize'],
   fontWeights: ['fontWeight'],
   keyframes: ['animationName'],
@@ -331,8 +332,10 @@ const evaluatedStyle = {
 | Theme key | `uinix-theme` | `theme-ui` |
 | --- | --- | --- |
 | `animations` | yes | no |
+| `fontFamilies` | yes | no (see `fonts`) |
 | `keyframes` | yes | no |
 | `spacings` | yes | no (see `space`) |
+| `fonts` | no | yes (see `fontFamilies`) |
 | `space` | no (see `spacings`) | yes |
 | `styles` | no* | yes |
 | `variants` | no* | yes |
@@ -344,9 +347,10 @@ const evaluatedStyle = {
 
 The `Theme` object provides relevant data for a theme provider implementor to resolve theme values based on the mappings specified in the [Theme Specification](#theme-specification).
 
-The `Theme` object has two main structural parts:
+The `Theme` object has three main structural parts:
 - [Theme values](#theme-values)
 - [Breakpoints](#breakpoints)
+- [Font faces](#font-faces)
 
 The following keys need to exist on the `Theme` object for it to be well-formed.
 
@@ -358,7 +362,7 @@ const defaultTheme = {
   borderStyles: {},
   borderWidths: {},
   colors: {},
-  fonts: {},
+  fontFamilies: {},
   fontSizes: {},
   fontWeights: {},
   keyframes: {},
@@ -372,8 +376,9 @@ const defaultTheme = {
   transforms: {},
   transitions: {},
   zIndices: {},
-  // breakpoints
+  // special
   breakpoints: {},
+  fontFaces: {},
 };
 ```
 
@@ -480,6 +485,10 @@ const theme = {
 };
 ```
 
+### Font faces
+
+> TODO: update
+
 ### Example
 
 The following provides an example of styling a responsive `Card` component using a custom `Theme`.  We will skip details on the implementation of the `css` utility that resolves themed styles into CSS values, but we recommend checking out the [`uinix-ui`][uinix-ui] project for an example implementation of a theme `Provider`.
@@ -497,7 +506,7 @@ const theme = {
       gray2: '#eee',
     },
   },
-  fonts: {
+  fontFamilies: {
     body: 'system-ui',
     heading: 'impact',
   },

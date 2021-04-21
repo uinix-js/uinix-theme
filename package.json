@@ -24,9 +24,9 @@
     "uinix-fp": "github:uinix-js/uinix-fp"
   },
   "devDependencies": {
-    "c8": "^7.7.0",
+    "c8": "^7.7.1",
     "tape": "^5.2.2",
-    "xo": "^0.38.2"
+    "xo": "^0.39.1"
   },
   "scripts": {
     "format": "xo --fix",

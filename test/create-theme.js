@@ -5,12 +5,13 @@ import { createTheme } from '../index.js';
 test('createTheme', (t) => {
   const defaultTheme = {
     breakpoints: {},
+    fontFaces: {},
     animations: {},
     borders: {},
     borderStyles: {},
     borderWidths: {},
     colors: {},
-    fonts: {},
+    fontFamilies: {},
     fontSizes: {},
     fontWeights: {},
     keyframes: {},
@@ -29,6 +30,12 @@ test('createTheme', (t) => {
   const overrideTheme = {
     breakpoints: {
       phone: '400px',
+    },
+    fontFaces: {
+      Raleway: {
+        files: ['./raleway.woff'],
+        fontWeight: 'bold',
+      },
     },
     colors: {
       palette: {

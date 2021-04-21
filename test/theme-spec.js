@@ -58,7 +58,7 @@ test('createTheme', (t) => {
       'fill',
       'stroke',
     ],
-    fonts: ['fontFamily'],
+    fontFamilies: ['fontFamily'],
     fontSizes: ['fontSize'],
     fontWeights: ['fontWeight'],
     keyframes: ['animationName'],
