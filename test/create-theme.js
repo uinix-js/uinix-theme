@@ -1,6 +1,6 @@
 import test from 'tape';
 
-import { createTheme } from '../index.js';
+import {createTheme} from '../index.js';
 
 test('createTheme', (t) => {
   const defaultTheme = {

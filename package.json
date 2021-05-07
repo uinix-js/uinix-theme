@@ -1,13 +1,14 @@
 {
   "name": "uinix-theme",
   "version": "0.1.0",
-  "description": "Theme spec and utilties for building UIs with uinix",
+  "description": "uinix theme spec and utilties",
   "license": "MIT",
   "keywords": [
     "uinix",
     "theme",
     "spec",
-    "design system"
+    "design system",
+    "ui system"
   ],
   "repository": "uinix-js/uinix-theme",
   "bugs": "https://github.com/uinix-js/uinix-theme/issues",
@@ -21,37 +22,49 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "uinix-fp": "github:uinix-js/uinix-fp"
+    "uinix-fp": "^0.1.0"
   },
   "devDependencies": {
-    "c8": "^7.7.1",
+    "@types/tape": "^4.13.0",
+    "c8": "^7.7.2",
+    "rimraf": "^3.0.2",
     "tape": "^5.2.2",
+    "type-coverage": "^2.17.5",
+    "typescript": "^4.2.4",
     "xo": "^0.39.1"
   },
   "scripts": {
-    "format": "xo --fix",
+    "clean": "rimraf {lib/**,}*.d.ts",
+    "coverage": "npm run type-coverage && npm run test-coverage",
+    "lint": "xo --fix",
+    "prepack": "npm run coverage && npm run lint",
     "test-coverage": "c8 --check-coverage --lines 100 --functions 100 --branches 100 --reporter lcov node test/index.js",
-    "test": "npm run format && npm run test-coverage"
+    "type-coverage": "tsc && type-coverage",
+    "test": "npm run prepack"
   },
   "engines": {
-    "node": ">=12.17.0"
+    "node": ">=12"
   },
   "prettier": {
-    "bracketSpacing": true,
-    "jsxBracketSameLine": true,
+    "bracketSpacing": false,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
     "trailingComma": "all",
     "useTabs": false
   },
+  "typeCoverage": {
+    "atLeast": 100,
+    "detail": true,
+    "strict": true
+  },
   "xo": {
-    "prettier": true,
     "esnext": false,
+    "prettier": true,
     "rules": {
-      "capitalized-comments": "off",
-      "padding-line-between-statements": "off",
       "unicorn/no-array-callback-reference": "off",
       "unicorn/no-array-for-each": "off",
-      "unicorn/no-array-reduce": "off",
-      "unicorn/prefer-spread": "off"
+      "unicorn/no-array-reduce": "off"
     }
   }
 }

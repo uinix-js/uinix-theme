@@ -1,6 +1,6 @@
 import test from 'tape';
 
-import { themeSpec } from '../index.js';
+import {themeSpec} from '../index.js';
 
 test('createTheme', (t) => {
   const snapshot = {
