@@ -4,8 +4,6 @@ import {createTheme} from '../index.js';
 
 test('createTheme', (t) => {
   const defaultTheme = {
-    breakpoints: {},
-    fontFaces: {},
     animations: {},
     borders: {},
     borderStyles: {},
@@ -28,15 +26,6 @@ test('createTheme', (t) => {
   };
 
   const overrideTheme = {
-    breakpoints: {
-      phone: '400px',
-    },
-    fontFaces: {
-      Raleway: {
-        files: ['./raleway.woff'],
-        fontWeight: 'bold',
-      },
-    },
     colors: {
       palette: {
         red0: '##330000',
@@ -71,6 +60,13 @@ test('createTheme', (t) => {
         s: 16,
         m: 24,
         l: 32,
+      },
+    },
+    unsupportedProperty: {
+      a: {
+        b: {
+          c: 42,
+        },
       },
     },
   };
