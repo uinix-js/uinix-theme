@@ -252,12 +252,13 @@ This section defines the fundamental concepts upon which this document is built.
 The development of `uinix-theme` has been largely inspired and influenced by [`theme-ui`][theme-ui] and [`fela`][fela].
 
 I (**[@chrisrzhou][]**) want to thank:
-- **[jxnblk][]** for his inspirational work over the years iterating on UI system libraries and toolings, from [`rebass`][rebass] to [`theme-ui`][theme-ui], providing ideas and the initial infra from which `uinix-theme` borrows heavily from.
-- **[robinweser][]** for his beautiful work on [`fela`][fela], which enables `uinix-theme` to be more specifically defined, since [`fela`][fela] and its ecosystem provided definitive proof that `uinix-theme`'s theme spec can be easily implemented by providers.
+- **[@jxnblk][]** for his inspirational work over the years iterating on UI system libraries and toolings, from [`rebass`][rebass] to [`theme-ui`][theme-ui], providing ideas and the initial infra from which `uinix-theme` borrows heavily from.
+- **[@robinweser][]** for his beautiful work on [`fela`][fela], which enables `uinix-theme` to be more specifically defined, since [`fela`][fela] and its ecosystem provided definitive proof that `uinix-theme`'s theme spec can be easily implemented by providers.
+- **[@wooorm][]** for his extensive work and writings in open-source, from which I am endlessly and passively learning from.
 
 ## License
 
-[MIT][license] © [Chris Zhou][author]
+[MIT][license] © [Chris Zhou][@chrisrzhou]
 
 
 <!-- badges -->
@@ -271,6 +272,10 @@ I (**[@chrisrzhou][]**) want to thank:
 [bundle-size]: https://bundlephobia.com/acc?p=uinix-theme
 
 <!-- defs -->
+[@chrisrzhou]: https://github.com/chrisrzhou
+[@jxnblk]: https://github.com/jxnblk
+[@robinweser]: https://github.com/robinweser
+[@wooorm]: https://github.com/wooorm
 [author]: https://github.com/chrisrzhou
 [esm]: https://nodejs.org/api/esm.html
 [css-reference]: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
