@@ -240,11 +240,11 @@ This refers to CSS property names expresssed in JS notation.  The MDN [CSS Prope
 
 The CSS property value refers to the valid value associated with a [CSS property](#css-property).
 
-> Note that depending on the CSS-in-JS implementation (e.g. [`emotion`][emotion]) for CSS property values, other value formats maybe acceptable as well.  For example, `4px` and `4` are acceptable values for the `borderLeft` property.  For purposes of this documentation, we will only cover the minimal requirements of the spec, and remind that this value should reflect a meaningful CSS property value.
+> Note: Depending on the CSS-in-JS implementation (e.g. [`emotion`][emotion]) for CSS property values, other value formats maybe acceptable as well.  For example, `4px` and `4` are acceptable values for the `borderLeft` property.  For purposes of this documentation, we will only cover the minimal requirements of the spec, and remind that this value should reflect a meaningful CSS property value.
 
 #### Example
 
-The following examples are valid CSS property values to their corresponding CSS properties:
+The following examples are valid CSS property values for their corresponding CSS properties:
 - `'backgroundColor'`: `'red'`
 - `'borderLeft'`: `'4px'`
 - `'borderLeft'`: `4`
@@ -282,9 +282,7 @@ const slidein = {
 
 ### Theme property
 
-The theme property is a variable associated with one or many [CSS properties](#css-property).  They form the keys of the [theme](#theme). Any value specified to a theme property may be applied to these associated CSS properties.
-
-A theme property must be of `'string'` type.
+The theme property is a string variable that relates to one or many [CSS properties](#css-property).  They form the keys of the [theme](#theme). Any [CSS property value](#css-property-value) specified for a theme property is consequently applied to these associated CSS properties.
 
 #### Example
 
@@ -349,7 +347,7 @@ A theme property definition can be arbitrarily nested, but should always resolve
 
 ### Theme property path
 
-A theme property path is a representation of the object key path for nested [theme property definitions](#theme-property-definition).
+A theme property path is a representation of the object key path for [theme property definitions](#theme-property-definition).
 
 #### Example
 
@@ -370,7 +368,7 @@ const definition = {
 }
 ```
 
-And an example method `props`, which returns the value based on the property path of an object, we expect the following:
+And an example method [`props`][props] which returns the value based on the property path of an object, we expect the following:
 
 ```js
 props('scale')(definition); // definition.scale
@@ -385,11 +383,11 @@ props('scale.invalid.property.path')(definition); // undefined
 
 The theme mapping is a JSON-serializable JS object describing the mapping between [theme properties](#theme-property) and [CSS properties](#css-property).  It provides a static way for [theme providers](#theme-providers) to reference this relationship.
 
-The formal `themeMapping` is exported by `uinix-theme` and can be referenced with this [link](lib/theme-mapping.js).
+The formal `themeMapping` exported by `uinix-theme` and can be referenced with this [link](lib/theme-mapping.js).
 
 ## Spec
 
-*Last updated on 2021-05-09*
+*Last updated on 2021-05-09.*
 
 Definitions and concepts defined in the [Infra](#infra) section are referenced throughout this section.
 
@@ -407,7 +405,7 @@ The theme is a JS object that must:
 - contain [theme properties](#theme-property) defined in the [theme mapping](#theme-mapping) as the object keys.
 - contain [theme property definitions](#theme-property-definition) that resolve into [theme property values](#theme-property-value) as the object values.
 
-An example spec-compliant theme object, with comments, is provided below:
+An example of a spec-compliant theme object, with comments, is provided below:
 
 ```js
 const theme = { // must contain all theme properties defined in themeMapping
@@ -439,7 +437,7 @@ const theme = { // must contain all theme properties defined in themeMapping
   fontWeights: {},
   keyframes: {
     opacities: { // nested theme property definition
-      appear: { // resolved theme property value (css keyframes rule value)
+      appear: { // resolved theme property value (a valid CSS keyframes rule value)
         "0%": {
           opacity: "invisible",
         },
@@ -447,7 +445,7 @@ const theme = { // must contain all theme properties defined in themeMapping
           opacity: "visible",
         },
       },
-      reappear: { // resolved theme property value (css keyframes rule value)
+      reappear: { // resolved theme property value (a valid CSS keyframes rule value)
         "0%": {
           opacity: "invisible",
         },
@@ -478,7 +476,7 @@ const theme = { // must contain all theme properties defined in themeMapping
       l: 32,
     },
     widths: { // nested theme property definition
-      container: [ // resolved theme property value (array of css property values)
+      container: [ // resolved theme property value (array of CSS property values)
         "100%",
         "100%",
         "768px"
@@ -582,7 +580,7 @@ const resolvedStyle = {
 
 #### Example
 
-Please reference the `Provider` component in [`uinix-ui`][uinix-ui] as an example.
+Please reference the [`Provider`][provider] component in [`uinix-ui`][uinix-ui] as an example.
 
 We also recommend checking out the [`fela`][fela] library to implement style systems and providers in general.
 
@@ -595,13 +593,13 @@ s theme spec, there are some differences, which are outlined below.
 
 ### Goals
 
-The `uinix-theme` spec is a stricter spec than `theme-ui`'s, and deals only with the relationship between [theme properties](#theme-property) and [CSS properties](#css-property), with a consistent and strict enforcement on how [theme property values](#theme-property-value) are defined through [theme property definitions](#theme-property-definition).  `theme-ui`'s spec includes more concepts and features, such as `variants`, `styles`, `colors.modes`.
+The `uinix-theme` spec is more strict than the `theme-ui` spec, and deals only with the relationship between [theme properties](#theme-property) and [CSS properties](#css-property), with a consistent and strict enforcement on how [theme property values](#theme-property-value) are defined through [theme property definitions](#theme-property-definition).  The `theme-ui` spec includes more concepts and features, such as `variants`, `styles`, `colors.modes`.
 
-In summary, `theme-ui`'s spec is more comprehensive and convenient, while `uinix-theme`'s spec is more narrow and strict, and defers concepts unrelated to the theme [spec](#spec) to implementors.
+In summary, the `theme-ui` spec is more comprehensive and convenient, while the `uinix-theme` spec is more strict and focused.  Concepts unrelated to [theme properties](#theme-property), [theme property values](#theme-property-value) and [theme property definitions](#theme-property-definition) are not included in the spec, and deferred to implementors.
 
 ### Features
 
-The following table compares feature differences between `theme-ui` and `uinix-theme`:
+The following table compares spec feature differences between `theme-ui` and `uinix-theme`:
 
 | Theme key | `uinix-theme` | `theme-ui` | Comments
 | --- | --- | --- | ---
@@ -617,7 +615,7 @@ The following table compares feature differences between `theme-ui` and `uinix-t
 | `variants` | no | yes |
 | `colors.modes` | no | yes |
 
-*Last updated on 2021-05-09*
+*Last updated on 2021-05-09.*
 
 ## Typings
 
@@ -645,7 +643,7 @@ The development of `uinix-theme` has been largely inspired and influenced by [`t
 I (**[@chrisrzhou][]**) want to thank:
 - **[@jxnblk][]** for his inspirational work over the years iterating on UI system libraries, from [`rebass`][rebass] to [`theme-ui`][theme-ui], providing ideas and approaches from which `uinix-theme` borrows heavily from.
 - **[@robinweser][]** for his beautiful work on [`fela`][fela], which allows `uinix-theme` to be more narrowly implemented, since [`fela`][fela] and its ecosystem provided definitive proof that `uinix-theme`'s theme [spec](#spec) can be easily implemented by providers (e.g. in [`uinix-ui`][uinix-ui]).
-- **[@wooorm][]** for his extensive work and writings in open-source, encouraging me to endlessly and passively improve in my own work.
+- **[@wooorm][]** for his extensive work and writings in open-source, and a endless source for personal learning and improving.
 
 ## License
 
@@ -676,6 +674,8 @@ I (**[@chrisrzhou][]**) want to thank:
 [fela]: https://github.com/robinweser/fela
 [issue]: https://github.com/uinix-js/uinix-theme/issues
 [license]: license
+[props]: https://github.com/uinix-js/uinix-fp/blob/main/lib/props.js
+[provider]: https://github.com/uinix-js/uinix-ui/blob/main/lib/context/provider.js
 [pull-request]: https://github.com/uinix-js/uinix-theme/pulls
 [rebass]: https://github.com/rebassjs/rebass
 [theme-ui]: https://github.com/system-ui/theme-ui
