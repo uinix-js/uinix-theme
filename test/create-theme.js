@@ -28,9 +28,9 @@ test('createTheme', (t) => {
   const overrideTheme = {
     colors: {
       palette: {
-        red0: '##330000',
-        red1: '##aa0000',
-        red2: '##bb0000',
+        red0: '#330000',
+        red1: '#aa0000',
+        red2: '#bb0000',
       },
       brand: {
         primary: 'blue',
@@ -60,13 +60,6 @@ test('createTheme', (t) => {
         s: 16,
         m: 24,
         l: 32,
-      },
-    },
-    unsupportedProperty: {
-      a: {
-        b: {
-          c: 42,
-        },
       },
     },
   };
