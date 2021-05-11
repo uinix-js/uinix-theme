@@ -293,18 +293,18 @@ The following theme properties are associated with their corresponding CSS prope
 ### Theme property value
 
 A theme property value can assume the form of either:
-- a [CSS property value](#css-property-value)
+- a singleton [CSS property value](#css-property-value)
 - an array of [CSS property values](#css-property-value)
 - a [CSS keyframes rule value](#css-keyframes-rule-value)
 
-These values form the values of the [theme](#theme), and will be detailed in later section.
+These values form the values of the [theme](#theme), and will be detailed in a later section.
 
 #### Example
 
 The following are valid theme property values:
-- `'4px'`, `4`, `'#ff0000'` (singleton CSS property value)
-- `[4, 8, 12]` (array of CSS property values)
--
+- a singleton CSS property value: `'4px'`, `4`, `'#ff0000'`
+- an array of CSS property values: `[4, 8, 12]`
+- a CSS keyframes rule value:
   ```js
   const slidein = {
     from: {
@@ -315,8 +315,6 @@ The following are valid theme property values:
     },
   }
   ```
-  (CSS keyframes rule value)
-
 
 ### Theme property definition
 
@@ -402,8 +400,10 @@ The theme acts as a central source of truth for organizing [theme property value
 
 The theme is a JS object that must:
 - be JSON-serializable.
-- contain [theme properties](#theme-property) defined in the [theme mapping](#theme-mapping) as the object keys.
-- contain [theme property definitions](#theme-property-definition) that resolve into [theme property values](#theme-property-value) as the object values.
+- contain [theme properties](#theme-property) defined by the [theme mapping](#theme-mapping) as the object keys.
+- contain [theme property definitions](#theme-property-definition) that resolve into [theme property values](#theme-property-value) as the object values.  The following additional restrictions must be applied as well:
+  - The [theme-property-values](#theme-property-value) for the `keyframes` [theme-property](#theme-property) must take the form of a [CSS keyframes rule value](#css-keyframes-rule-value).
+  - The [theme-property-values](#theme-property-value) for any other non-`keyframes` [theme-property](#theme-property) must *not* take the form of a [CSS keyframes rule value](#css-keyframes-rule-value), and can be any other forms that a [theme-property-value](#theme-property-value) can take.
 
 An example of a spec-compliant theme object, with comments, is provided below:
 
@@ -504,7 +504,7 @@ Providers must implement the requirements below so that programs can interact wi
 
 Providers must be able to resolve themed styles provided by consumers, into actual CSS styles that can be applied by browsers.
 
-Providers should use the [theme mapping](#theme-mapping) to look up how [theme property values](#theme-property-value) are associated to the [CSS property](#css-property) specified by consumers.  Resolving themed styles provided through [theme property paths](#theme-property-path) notation must be supported.
+Providers should use the [theme mapping](#theme-mapping) to look up how [theme property values](#theme-property-value) are associated to the [CSS property](#css-property) specified by consumers.  Resolving themed styles provided through [theme property path](#theme-property-path) notation must be supported.
 
 For example, given the following themed style referencing the [theme](#theme) object defined in the earlier section:
 
@@ -543,7 +543,7 @@ const k1 = { // generated keyframes rule object
 ```
 
 #### Responsive values
-The [theme property values](#theme-property-value) of a [theme](#theme) object may contain arrays of [CSS property value](#css-property-value).  Providers should make use of knowledge that array-based values indicate explicit application of responsive styles.  Providers should expose a way for consumers to specify breakpoints, so that the array-based theme values match up with the breakpoints correctly.
+The [theme property values](#theme-property-value) of a [theme](#theme) object may contain arrays of [CSS property values](#css-property-value).  Providers should make use of knowledge that array-based values indicate explicit application of responsive styles.  Providers should expose a way for consumers to specify breakpoints, so that the array-based theme values match up with the breakpoints correctly.
 
 For example, given a themed style referencing the [theme](#theme) object defined in the earlier section:
 
@@ -576,7 +576,7 @@ const resolvedStyle = {
 };
 ```
 
-> Note: The spec is unopinionated about the exact structure or concept of `breakpoints` and how this should work, but only requires the expected behavior of how responsive values are resolved for array-based [CSS property values](#css-property-value).
+> Note: The spec is unopinionated about the exact structure or concept of `breakpoints` and how this should behave, but only specifies that [CSS property values](#css-property-value) should be used for handling responsive styles.
 
 #### Example
 
@@ -589,28 +589,28 @@ We also recommend checking out the [`fela`][fela] library to implement style sys
 `uinix-theme`'s development and spec is largely inspired by [`theme-ui`][theme-ui], which formally pioneered the idea of constrained UI development against a theme spec.  `theme-ui`'s theme spec can be referenced with this [link][theme-ui-theme-spec].
 
 While `uinix-theme` shares many ideas and features with `theme-ui`
-s theme spec, there are some differences, which are outlined below.
+s theme spec, there are some differences, which are outlined in the following sections.
 
 ### Goals
 
-The `uinix-theme` spec is more strict than the `theme-ui` spec, and deals only with the relationship between [theme properties](#theme-property) and [CSS properties](#css-property), with a consistent and strict enforcement on how [theme property values](#theme-property-value) are defined through [theme property definitions](#theme-property-definition).  The `theme-ui` spec includes more concepts and features, such as `variants`, `styles`, `colors.modes`.
+The `uinix-theme` spec is more strict than the [`theme-ui`][theme-ui] spec, and deals only with the relationship between [theme properties](#theme-property) and [CSS properties](#css-property), with a consistent and strict enforcement on how [theme property values](#theme-property-value) are defined through [theme property definitions](#theme-property-definition).  The [`theme-ui`][theme-ui] spec includes more concepts and features, such as `variants`, `styles`, `colors`.
 
-In summary, the `theme-ui` spec is more comprehensive and convenient, while the `uinix-theme` spec is more strict and focused.  Concepts unrelated to [theme properties](#theme-property), [theme property values](#theme-property-value) and [theme property definitions](#theme-property-definition) are not included in the spec, and deferred to implementors.
+In summary, the [`theme-ui`][theme-ui] spec is more comprehensive and convenient, while the `uinix-theme` spec is more strict and focused.  Concepts unrelated to [theme properties](#theme-property), [theme property values](#theme-property-value) and [theme property definitions](#theme-property-definition) are not included in the spec, and are deferred to implementors.
 
 ### Features
 
-The following table compares spec feature differences between `theme-ui` and `uinix-theme`:
+The following table compares spec feature differences between [`theme-ui`][theme-ui] and `uinix-theme`:
 
-| Theme key | `uinix-theme` | `theme-ui` | Comments
+| Theme key | `uinix-theme` | `theme-ui` | Details
 | --- | --- | --- | ---
 | `animations` | yes | no |
-| `fontFamilies` | yes | no | renamed, see `fonts`
+| `fontFamilies` | yes | no | renamed (see `fonts`)
 | `keyframes` | yes | no |
-| `spacings` | yes | no | renamed, see `space`
+| `spacings` | yes | no | renamed (see `space`)
 | `transforms` | yes | no |
 | `breakpoints` | no | yes |
-| `fonts` | no | yes | renamed, see `fontFamilies`
-| `space` | no | yes | renamed, see `spacings`
+| `fonts` | no | yes | renamed (see `fontFamilies`)
+| `space` | no | yes | renamed (see `spacings`)
 | `styles` | no | yes |
 | `variants` | no | yes |
 | `colors.modes` | no | yes |
@@ -619,7 +619,7 @@ The following table compares spec feature differences between `theme-ui` and `ui
 
 ## Typings
 
-`uinix-theme` ships with [Typescript][typescript] declarations, compiled and emitted when installed.
+`uinix-theme` ships with [Typescript][typescript] declarations, compiled and emitted when installed.  The source code is pure Javascript.
 
 ## Contribute
 
@@ -638,12 +638,12 @@ Other than that, any [pull requests][pull-request] are welcome!
 
 ## Acknowledgements
 
-The development of `uinix-theme` has been largely inspired and influenced by [`theme-ui`][theme-ui] and [`fela`][fela].
+The development of the `uinix` theme [spec](#spec) has been largely inspired and influenced by [`theme-ui`][theme-ui] and [`fela`][fela].
 
 I (**[@chrisrzhou][]**) want to thank:
 - **[@jxnblk][]** for his inspirational work over the years iterating on UI system libraries, from [`rebass`][rebass] to [`theme-ui`][theme-ui], providing ideas and approaches from which `uinix-theme` borrows heavily from.
 - **[@robinweser][]** for his beautiful work on [`fela`][fela], which allows `uinix-theme` to be more narrowly implemented, since [`fela`][fela] and its ecosystem provided definitive proof that `uinix-theme`'s theme [spec](#spec) can be easily implemented by providers (e.g. in [`uinix-ui`][uinix-ui]).
-- **[@wooorm][]** for his extensive work and writings in open-source, and a endless source for personal learning and improving.
+- **[@wooorm][]** for his extensive work and writings in open-source, and being an endless source of inspiration on my journey of learning and self-improvement.
 
 ## License
 
