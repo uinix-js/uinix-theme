@@ -89,7 +89,7 @@ const overrideTheme = {
         '50%': { opacity: 'visible' },
         '100%': { opacity: 'invisible' },
       },
-    }
+    },
   },
   opacities: {
     invisible: 0,
@@ -111,12 +111,8 @@ const overrideTheme = {
       l: 32,
     },
     widths: {
-      container: [ // Array of CSS property values (responsive values)
-        '100%',
-        '100%',
-        '768px'
-      ],
-    }
+      container: '768px',
+    },
   },
 };
 
@@ -194,11 +190,7 @@ Yields
       "l": 32
     },
     "widths": {
-      "container": [
-        "100%",
-        "100%",
-        "768px"
-      ]
+      "container": "768px"
     }
   },
   "spacings": {
@@ -293,8 +285,7 @@ The following theme properties are associated with their corresponding CSS prope
 ### Theme property value
 
 A theme property value can assume the form of either:
-- a singleton [CSS property value](#css-property-value)
-- an array of [CSS property values](#css-property-value)
+- a [CSS property value](#css-property-value)
 - a [CSS keyframes rule value](#css-keyframes-rule-value)
 
 These values form the values of the [theme](#theme), and will be detailed in a later section.
@@ -302,8 +293,7 @@ These values form the values of the [theme](#theme), and will be detailed in a l
 #### Example
 
 The following are valid theme property values:
-- a singleton CSS property value: `'4px'`, `4`, `'#ff0000'`
-- an array of CSS property values: `[4, 8, 12]`
+- a CSS property value: `'4px'`, `4`, `'#ff0000'`
 - a CSS keyframes rule value:
   ```js
   const slidein = {
@@ -328,7 +318,7 @@ A theme property definition can be arbitrarily nested, but should always resolve
 {
   spacings: { // theme property definition (unnested)
     s: '32px', // resolves to a theme value (singleton css property value)
-    l: ['100%', '64px'], // resolves to a theme value (array of css property value)
+    l: '64px',
     scale: { // theme property definition (nested once)
       x0: 0, // eventually resolves to a theme value
       x1: '4px',
@@ -476,11 +466,7 @@ const theme = { // must contain all theme properties defined in themeMapping
       l: 32,
     },
     widths: { // nested theme property definition
-      container: [ // resolved theme property value (array of CSS property values)
-        "100%",
-        "100%",
-        "768px"
-      ],
+      container: "768px"
     },
   },
   spacings: {
@@ -543,40 +529,40 @@ const k1 = { // generated keyframes rule object
 ```
 
 #### Responsive values
-The [theme property values](#theme-property-value) of a [theme](#theme) object may contain arrays of [CSS property values](#css-property-value).  Providers should make use of knowledge that array-based values indicate explicit application of responsive styles.  Providers should expose a way for consumers to specify breakpoints, so that the array-based theme values match up with the breakpoints correctly.
+A themed style provided by consumers may be specified in array form.  Providers shouild take this as an indication to apply responsive styles.  Providers should also expose a way for consumers to specify breakpoints, so that these values can match up accordingly with the breakpoints.
 
 For example, given a themed style referencing the [theme](#theme) object defined in the earlier section:
 
 ```js
 const themedStyle = {
-  width: 'widths.container',
+  color: ['palette.red1', 'palette.red2', 'brand.primary'],
+  width: ['100%', '100%', 'widths.container']
 }
 ```
 
 and breakpoints,
 
 ```js
-const breakpoints = {
-  phone: '480px',
-  tablets: '768px',
-}
+const breakpoints = ['480px', '768px'];
 ```
 
 Providers should resolve this into:
-
 ```js
 const resolvedStyle = {
+  color: '#aa0000',
   width: '100%',
   "@media (min-width: 480px)": {
+    color: '#bb0000',
     width: '100%'
   },
   "@media (min-width: 768px)": {
+    color: 'blue',
     width: '768px',
   },
 };
 ```
 
-> Note: The spec is unopinionated about the exact structure or concept of `breakpoints` and how this should behave, but only specifies that [CSS property values](#css-property-value) should be used for handling responsive styles.
+> Note: The spec is unopinionated about the exact structure or concept of `breakpoints` and how this should behave exactly, and only specifies that [CSS property values](#css-property-value) should be used for handling responsive styles.
 
 #### Example
 
@@ -680,7 +666,6 @@ I (**[@chrisrzhou][]**) want to thank:
 [rebass]: https://github.com/rebassjs/rebass
 [theme-ui]: https://github.com/system-ui/theme-ui
 [theme-ui-theme-spec]: https://theme-ui.com/theme-spec
-[theme-ui-responsive-styles]: https://theme-ui.com/getting-started/#responsive-styles
 [typescript]: https://www.typescriptlang.org/
 [uinix]: https://github.com/uinix-js
 [uinix-ui]: https://github.com/uinix-js/uinix-ui

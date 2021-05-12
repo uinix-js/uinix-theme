@@ -1,5 +1,5 @@
-import camelCaseCss from 'camelcase-css';
 import fs from 'fs';
+import camelCaseCss from 'camelcase-css';
 import knownCssProperties from 'known-css-properties';
 
 import {themeMapping} from '../index.js';

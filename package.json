@@ -33,7 +33,7 @@
     "tape": "^5.2.2",
     "type-coverage": "^2.17.5",
     "typescript": "^4.2.4",
-    "xo": "^0.39.1"
+    "xo": "^0.40.1"
   },
   "scripts": {
     "clean": "rimraf {lib/**,}*.d.ts",
@@ -67,7 +67,8 @@
     "rules": {
       "unicorn/no-array-callback-reference": "off",
       "unicorn/no-array-for-each": "off",
-      "unicorn/no-array-reduce": "off"
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-node-protocol": "off"
     }
   }
 }
