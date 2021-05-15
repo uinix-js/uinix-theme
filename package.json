@@ -33,17 +33,18 @@
     "tape": "^5.2.2",
     "type-coverage": "^2.17.5",
     "typescript": "^4.2.4",
+    "uinix-scripts": "^0.1.2",
     "xo": "^0.40.1"
   },
   "scripts": {
-    "clean": "rimraf {lib/**,}*.d.ts",
+    "clean": "uinix-scripts clean",
     "coverage": "npm run type-coverage && npm run test-coverage",
     "lint": "xo --fix",
     "prepack": "npm run clean && npm run coverage && npm run lint",
     "report": "node script/report.js",
+    "test": "npm run prepack",
     "test-coverage": "c8 --check-coverage --lines 100 --functions 100 --branches 100 --reporter lcov node test/index.js",
-    "type-coverage": "tsc && type-coverage",
-    "test": "npm run prepack"
+    "type-coverage": "tsc && type-coverage"
   },
   "engines": {
     "node": ">=12"
