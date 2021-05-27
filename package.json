@@ -29,7 +29,6 @@
     "c8": "^7.7.2",
     "camelcase-css": "^2.0.1",
     "known-css-properties": "^0.21.0",
-    "rimraf": "^3.0.2",
     "tape": "^5.2.2",
     "type-coverage": "^2.17.5",
     "typescript": "^4.2.4",
@@ -70,6 +69,16 @@
       "unicorn/no-array-for-each": "off",
       "unicorn/no-array-reduce": "off",
       "unicorn/prefer-node-protocol": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "test/**/*.js"
+        ],
+        "rules": {
+          "import/no-unassigned-import": "off"
+        }
+      }
+    ]
   }
 }

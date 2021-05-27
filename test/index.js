@@ -1,2 +1,2 @@
-export * from './create-theme.js';
-export * from './theme-mapping.js';
+import './create-theme.js';
+import './theme-mapping.js';
