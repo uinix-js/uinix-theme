@@ -54,11 +54,7 @@ lineHeight,lineHeights
 opacity,opacities
 borderBottomLeftRadius,radii
 borderBottomRightRadius,radii
-borderEndEndRadius,radii
-borderEndStartRadius,radii
 borderRadius,radii
-borderStartEndRadius,radii
-borderStartStartRadius,radii
 borderTopLeftRadius,radii
 borderTopRightRadius,radii
 boxShadow,shadows
@@ -247,7 +243,9 @@ borderBoundary,
 borderCollapse,
 MozBorderEndColor,
 WebkitBorderEndColor,
+borderEndEndRadius,
 MozBorderEnd,
+borderEndStartRadius,
 MozBorderEndStyle,
 WebkitBorderEndStyle,
 WebkitBorderEnd,
@@ -283,7 +281,9 @@ MozBorderRightColors,
 borderSpacing,
 MozBorderStartColor,
 WebkitBorderStartColor,
+borderStartEndRadius,
 MozBorderStart,
+borderStartStartRadius,
 MozBorderStartStyle,
 WebkitBorderStartStyle,
 WebkitBorderStart,

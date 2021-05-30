@@ -68,11 +68,7 @@ test('themeMapping', (t) => {
     radii: [
       'borderBottomLeftRadius',
       'borderBottomRightRadius',
-      'borderEndEndRadius',
-      'borderEndStartRadius',
       'borderRadius',
-      'borderStartEndRadius',
-      'borderStartStartRadius',
       'borderTopLeftRadius',
       'borderTopRightRadius',
     ],
