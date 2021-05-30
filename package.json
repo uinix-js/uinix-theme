@@ -22,7 +22,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "uinix-fp": "^0.1.0"
+    "uinix-fp": "^0.2.2"
   },
   "devDependencies": {
     "@types/tape": "^4.13.0",
@@ -31,19 +31,18 @@
     "known-css-properties": "^0.21.0",
     "tape": "^5.2.2",
     "type-coverage": "^2.17.5",
-    "typescript": "^4.2.4",
+    "typescript": "^4.3.2",
     "uinix-scripts": "^0.1.2",
     "xo": "^0.40.1"
   },
   "scripts": {
+    "build": "npm run clean && tsc && type-coverage",
     "clean": "uinix-scripts clean",
-    "coverage": "npm run type-coverage && npm run test-coverage",
     "lint": "xo --fix",
-    "prepack": "npm run clean && npm run coverage && npm run lint",
+    "prepack": "npm run build && npm run lint",
     "report": "node script/report.js",
-    "test": "npm run prepack",
     "test-coverage": "c8 --check-coverage --lines 100 --functions 100 --branches 100 --reporter lcov node test/index.js",
-    "type-coverage": "tsc && type-coverage"
+    "test": "npm run build && npm run lint && npm run test-coverage"
   },
   "engines": {
     "node": ">=12"
