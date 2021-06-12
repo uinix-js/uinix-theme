@@ -529,7 +529,7 @@ const k1 = { // generated keyframes rule object
 ```
 
 #### Responsive values
-A themed style provided by consumers may be specified in array form.  Providers shouild take this as an indication to apply responsive styles.  Providers should also expose a way for consumers to specify breakpoints, so that these values can match up accordingly with the breakpoints.
+A themed style provided by consumers may be specified in array form.  Providers should take this as an indication to apply responsive styles.  Providers should also expose a way for consumers to specify breakpoints, so that these values can match up accordingly with the breakpoints.
 
 For example, given a themed style referencing the [theme](#theme) object defined in the earlier section:
 
@@ -562,13 +562,13 @@ const resolvedStyle = {
 };
 ```
 
-> Note: The spec is unopinionated about the exact structure or concept of `breakpoints` and how this should behave exactly, and only specifies that [CSS property values](#css-property-value) should be used for handling responsive styles.
+> Note: The spec is unopinionated about the definition or structure of `breakpoints`, and only requires that responsive styles be specified as an array of [CSS property values](#css-property-value) matching these `breakpoints`.
 
 #### Example
 
-Please reference the [`Provider`][provider] component in [`uinix-ui`][uinix-ui] as an example.
+Please reference the [`uinix-ui`][uinix-ui] [system API][uinix-ui-system-api] for an example.
 
-We also recommend checking out the [`fela`][fela] library to implement style systems and providers in general.
+We also recommend checking out the [`fela`][fela] library on implementing style systems and providers.
 
 ## Differences with `theme-ui`
 
@@ -581,11 +581,11 @@ s theme spec, there are some differences, which are outlined in the following se
 
 The `uinix-theme` spec is more strict than the [`theme-ui`][theme-ui] spec, and deals only with the relationship between [theme properties](#theme-property) and [CSS properties](#css-property), with a consistent and strict enforcement on how [theme property values](#theme-property-value) are defined through [theme property definitions](#theme-property-definition).  The [`theme-ui`][theme-ui] spec includes more concepts and features, such as `variants`, `styles`, `colors`.
 
-In summary, the [`theme-ui`][theme-ui] spec is more comprehensive and convenient, while the `uinix-theme` spec is more strict and focused.  Concepts unrelated to [theme properties](#theme-property), [theme property values](#theme-property-value) and [theme property definitions](#theme-property-definition) are not included in the spec, and are deferred to implementors.
+The [`theme-ui`][theme-ui] spec is more comprehensive and convenient, while the `uinix-theme` spec is more strict and focused.  Concepts unrelated to [theme properties](#theme-property), [theme property values](#theme-property-value) and [theme property definitions](#theme-property-definition) are not included in the spec, and are deferred to implementors.
 
 ### Features
 
-The following table compares spec feature differences between [`theme-ui`][theme-ui] and `uinix-theme`:
+The following table summarizes spec feature differences between [`theme-ui`][theme-ui] and `uinix-theme`:
 
 | Theme key | `uinix-theme` | `theme-ui` | Details
 | --- | --- | --- | ---
@@ -609,7 +609,7 @@ The following table compares spec feature differences between [`theme-ui`][theme
 
 ## Contribute
 
-`uinix-theme` does *not* provide a *complete* theme spec.  The [CSS properties report][css-properties-report] provides a CSV report of [CSS properties](#css-property) supported by the theme [spec](#spec).
+`uinix-theme` does *not* cover all CSS properties in the theme spec.  The [`css-properties-report.csv`][css-properties-report] file summarizes [CSS properties](#css-property) currently supported by the theme [spec](#spec).
 
 In general, not all CSS properties are immediately useful, and are not included in the current theme [spec](#spec).  If you would like to suggest a new CSS property to be supported, please create an [issue][issue] and raise a discussion around the addition.
 
@@ -618,8 +618,8 @@ Other than that, any [pull requests][pull-request] are welcome!
 
 ## Related
 
-- [`uinix-ui`][uinix-ui] - minimal primitives to build and compose rich UIs.
-- [`theme-ui`][theme-ui] - the first notable UI system to formally define interoperable system components against a [theme spec][theme-ui-theme-spec].
+- [`uinix-ui`][uinix-ui] - a minimal UI system to build UI systems.
+- [`theme-ui`][theme-ui] - the first UI system library to formalizing building interoperable system components against a [theme spec][theme-ui-theme-spec].
 - [`fela`][fela] - plugin-centric library to build style systems.
 
 ## Acknowledgements
@@ -661,7 +661,6 @@ I (**[@chrisrzhou][]**) want to thank:
 [issue]: https://github.com/uinix-js/uinix-theme/issues
 [license]: license
 [props]: https://github.com/uinix-js/uinix-fp/blob/main/lib/props.js
-[provider]: https://github.com/uinix-js/uinix-ui/blob/main/lib/context/provider.js
 [pull-request]: https://github.com/uinix-js/uinix-theme/pulls
 [rebass]: https://github.com/rebassjs/rebass
 [theme-ui]: https://github.com/system-ui/theme-ui
@@ -669,3 +668,4 @@ I (**[@chrisrzhou][]**) want to thank:
 [typescript]: https://www.typescriptlang.org/
 [uinix]: https://github.com/uinix-js
 [uinix-ui]: https://github.com/uinix-js/uinix-ui
+[uinix-ui-system-api]: https://github.com/uinix-js/uinix-ui/blob/main/lib/system/api.js
