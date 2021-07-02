@@ -13,27 +13,28 @@
   "repository": "uinix-js/uinix-theme",
   "bugs": "https://github.com/uinix-js/uinix-theme/issues",
   "author": "Chris Zhou <chrisrzhou@pm.me> (https://chrisrzhou.io)",
+  "sideEffects": false,
   "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
     "lib/",
     "index.js",
     "index.d.ts"
   ],
-  "main": "index.js",
-  "types": "index.d.ts",
   "dependencies": {
     "uinix-fp": "^0.2.2"
   },
   "devDependencies": {
     "@types/tape": "^4.13.0",
-    "c8": "^7.7.2",
+    "c8": "^7.7.3",
     "camelcase-css": "^2.0.1",
     "known-css-properties": "^0.21.0",
     "tape": "^5.2.2",
-    "type-coverage": "^2.17.5",
-    "typescript": "^4.3.2",
+    "type-coverage": "^2.18.0",
+    "typescript": "^4.3.5",
     "uinix-scripts": "^0.1.2",
-    "xo": "^0.40.1"
+    "xo": "^0.40.3"
   },
   "scripts": {
     "build": "npm run clean && tsc && type-coverage",
