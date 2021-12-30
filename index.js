@@ -5,3 +5,4 @@
 
 export {createTheme} from './lib/create-theme.js';
 export {themeMapping} from './lib/theme-mapping.js';
+export * as types from './lib/types.js';
