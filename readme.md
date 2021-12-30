@@ -5,7 +5,7 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][bundle-size-badge]][bundle-size]
 
-[uinix][uinix-js] theme spec and utilties.
+Configurable theme spec and utilties.
 
 ---
 
@@ -45,7 +45,7 @@ npm install uinix-theme
 
 This package has no default export and exports the following identifiers:
 - `createTheme`
-- `createThemeSpec`
+- `defaultThemeSpec`
 
 APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the source code.
 

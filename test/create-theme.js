@@ -3,50 +3,12 @@ import test from 'tape';
 import {createTheme} from '../index.js';
 
 test('createTheme', (t) => {
-  const defaultTheme = {
-    animations: {},
-    borders: {},
-    borderStyles: {},
-    borderWidths: {},
-    colors: {},
-    fontFamilies: {},
-    fontSizes: {},
-    fontWeights: {},
-    keyframes: {},
-    letterSpacings: {},
-    lineHeights: {},
-    opacities: {},
-    radii: {},
-    shadows: {},
-    sizes: {},
-    spacings: {},
-    transforms: {},
-    transitions: {},
-    zIndices: {},
-  };
-
-  const overrideTheme = {
+  const theme = {
     colors: {
-      palette: {
-        red0: '#330000',
-        red1: '#aa0000',
-        red2: '#bb0000',
-      },
       brand: {
         primary: 'blue',
         active: 'purple',
       },
-    },
-    fontFamilies: {
-      body: 'arial',
-      heading: 'impact',
-    },
-    fontSizes: {
-      xs: 12,
-      s: 16,
-      m: 20,
-      l: 32,
-      xl: 40,
     },
     spacings: {
       xs: 4,
@@ -55,25 +17,115 @@ test('createTheme', (t) => {
       l: 32,
       xl: 64,
     },
-    sizes: {
-      icon: {
-        s: 16,
-        m: 24,
-        l: 32,
-      },
+    invalidProperty: {
+      s: 8,
+      m: 16,
+      l: 32,
     },
   };
 
-  t.deepEqual(createTheme(), defaultTheme, 'should create default theme');
+  t.test('default theme spec', (t) => {
+    t.deepEqual(
+      createTheme(),
+      {
+        animations: {},
+        backgrounds: {},
+        borders: {},
+        borderStyles: {},
+        borderWidths: {},
+        colors: {},
+        filters: {},
+        fontFamilies: {},
+        fontSizes: {},
+        fontWeights: {},
+        keyframes: {},
+        letterSpacings: {},
+        lineHeights: {},
+        opacities: {},
+        radii: {},
+        shadows: {},
+        sizes: {},
+        spacings: {},
+        transforms: {},
+        transitions: {},
+        zIndices: {},
+      },
+      'should create default theme',
+    );
 
-  t.deepEqual(
-    createTheme(overrideTheme),
-    {
-      ...defaultTheme,
-      ...overrideTheme,
-    },
-    'should override and merge theme',
-  );
+    t.deepEqual(
+      createTheme(theme),
+      {
+        animations: {},
+        backgrounds: {},
+        borders: {},
+        borderStyles: {},
+        borderWidths: {},
+        colors: {
+          brand: {
+            primary: 'blue',
+            active: 'purple',
+          },
+        },
+        filters: {},
+        fontFamilies: {},
+        fontSizes: {},
+        fontWeights: {},
+        keyframes: {},
+        letterSpacings: {},
+        lineHeights: {},
+        opacities: {},
+        radii: {},
+        shadows: {},
+        sizes: {},
+        spacings: {
+          xs: 4,
+          s: 8,
+          m: 16,
+          l: 32,
+          xl: 64,
+        },
+        transforms: {},
+        transitions: {},
+        zIndices: {},
+      },
+      'should create theme based on theme spec and leaves out non-specified theme properties in provided theme.',
+    );
+
+    t.end();
+  });
+
+  t.test('custom theme spec', (t) => {
+    const customThemeSpec = {
+      animations: ['animation'],
+      colors: ['backgroundColor', 'color'],
+    };
+
+    t.deepEqual(
+      createTheme({}, customThemeSpec),
+      {
+        animations: {},
+        colors: {},
+      },
+      'should create theme based on custom theme spec',
+    );
+
+    t.deepEqual(
+      createTheme(theme, customThemeSpec),
+      {
+        animations: {},
+        colors: {
+          brand: {
+            primary: 'blue',
+            active: 'purple',
+          },
+        },
+      },
+      'should create theme based on theme spec and leaves out non-specified theme properties in provided theme.',
+    );
+
+    t.end();
+  });
 
   t.end();
 });

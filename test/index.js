@@ -1,2 +1,2 @@
 import './create-theme.js';
-import './theme-mapping.js';
+import './default-theme-spec.js';
