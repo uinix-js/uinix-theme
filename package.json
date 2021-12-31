@@ -1,7 +1,7 @@
 {
   "name": "uinix-theme",
   "version": "0.2.3",
-  "description": "Configurable theme spec and utilties",
+  "description": "Configurable theme spec and utilties.  Your theme, your rules 🤘.",
   "license": "MIT",
   "keywords": [
     "uinix",
@@ -30,9 +30,7 @@
     "index.d.ts"
   ],
   "exports": "./index.js",
-  "dependencies": {
-    "uinix-fp-merge": "^1.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/tape": "^4.13.0",
     "c8": "^7.7.3",
