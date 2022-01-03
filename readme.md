@@ -10,6 +10,7 @@ With `uinix-theme`, you can configure your own theme and specs for building UIs.
 Your theme your rules 🤘.
 
 ## Contents
+
 - [Install](#install)
 - [Use](#use)
 - [API](#api)
@@ -41,6 +42,13 @@ Create a theme based on a theme spec by providing a partial theme.
 ```js
 import {createTheme} from 'uinix-theme';
 
+const themeSpec = {
+  colors: ['backgroundColor', 'color'],
+  opacities: ['opacity'],
+  shadows: ['boxShadow', 'textShadow'],
+  spacings: ['margin', 'padding'],
+};
+
 const theme = {
   colors: {
     brand: '#f00',
@@ -54,14 +62,7 @@ const theme = {
     m: 16,
     l: 32,
   },
-  invalidProperty: 'will be dropped',
-};
-
-const themeSpec = {
-  colors: ['backgroundColor', 'color'],
-  opacities: ['opacity'],
-  shadows: ['boxShadow', 'textShadow'],
-  spacings: ['margin', 'padding'],
+  invalidProperty: 'will be dropped because it does not exist in the themeSpec',
 };
 
 createTheme(theme, themeSpec);
@@ -88,6 +89,7 @@ createTheme(theme, themeSpec);
 ## API
 
 This package has no default export and exports the following identifiers:
+
 - `createTheme`
 - `defaultThemeSpec`
 
@@ -96,28 +98,32 @@ APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the sour
 ### `createTheme([theme, themeSpec])`
 
 ###### Parameters
-- `theme` (`Theme`, optional) — Object of theme property and (nested) theme property definitions resolving to CSS values.
-- `themeSpec` (`ThemeSpec`, optional) — Object of theme property and CSS properties.
+
+- `theme` (`Theme`, optional) — An object relating theme properties and (nested) theme property definitions that eventually resolve into CSS values.
+- `themeSpec` (`ThemeSpec`, optional) – An object relating theme properties and CSS properties.
 
 ###### Returns
-- `Theme` — Returns a theme based on the provided `theme` and `themeSpec`.  Invalid theme properties not specified on the `themeSpec` are dropped out.
+
+- `Theme` — Returns a theme based on the provided `theme` and `themeSpec`. Invalid theme properties not specified on the `themeSpec` are dropped out.
 
 ### `defaultThemeSpec`
 
 ###### Value
+
 - `ThemeSpec` — The default [uinix][uinix-js] theme spec.
 
 ## Glossary
 
 ### Theme
 
-A theme is a JS object that relates theme properties with CSS values.  The following is an example of organizing CSS color values under the `colors` theme property.
+A theme is a JS object that relates theme properties with CSS values. The following is an example of organizing CSS color values under the `colors` theme property.
 
 ```js
 const theme = {
   colors: {
     brand: '#f00',
-    background: { // can be arbitrarily nested
+    background: {
+      // can be arbitrarily nested
       primary: '#fff',
       secondary: '#ccc',
     },
@@ -125,9 +131,9 @@ const theme = {
 };
 ```
 
-With a theme, we can access CSS values statically without hardcoding them (e.g. `theme.colors.background.primary` instead of `'#f00'`).
+With a theme, we can access CSS values statically without hardcoding them (e.g. `theme.colors.background.primary` instead of `'#fff'`).
 
-We can whitelist CSS properties to be *theme-aware* using a theme spec, as detailed in the next section.
+We can whitelist CSS properties to be _theme-aware_ by using a theme spec, as detailed in the next section.
 
 ### Theme spec
 
@@ -135,15 +141,11 @@ A theme spec is a JS object that relates theme properties in a theme with CSS pr
 
 ```js
 const themeSpec = {
-  colors: [
-    'backgroundColor',
-    'borderColor',
-    'color',
-  ],
+  colors: ['backgroundColor', 'borderColor', 'color'],
 };
 ```
 
-In the example above, the CSS properties `backgroundColor`, `borderColor`, `color` would be aware of the CSS values defined in `theme.colors`.  The theme spec uses a whitelist strategy and unspecified CSS properties are not be theme-aware.
+In the example above, the CSS properties `backgroundColor`, `borderColor`, `color` would be aware of the CSS values defined in `theme.colors`. The theme spec uses a whitelist strategy and unspecified CSS properties are not be theme-aware.
 
 ### Theme provider
 
@@ -155,7 +157,7 @@ For example, given the following `theme` and `themeSpec`,
 const theme = {
   colors: {
     brand: '#f00',
-    background: { // can be arbitrarily nested
+    background: {
       primary: '#fff',
       secondary: '#ccc',
     },
@@ -163,15 +165,11 @@ const theme = {
 };
 
 const themeSpec = {
-  colors: [
-    'backgroundColor',
-    'borderColor',
-    'color',
-  ],
+  colors: ['backgroundColor', 'color'],
 };
 ```
 
-A `themeProvider` may resolve the following themed style into a valid CSS style:
+A `themeProvider` may resolve the following themed style object into the appropriate CSS style object.
 
 ```js
 const themedStyle = {
@@ -190,7 +188,7 @@ themeProvider.resolve(themedStyle);
  */
 ```
 
-> **Note:** `uinix-theme` does not implement a theme provider.  You may refer to [`uinix-ui`][uinix-ui] for an implementation.
+> **Note:** `uinix-theme` does not implement a theme provider. You may refer to [`uinix-ui`][uinix-ui] for an implementation.
 
 ## Project
 
@@ -199,18 +197,22 @@ themeProvider.resolve(themedStyle);
 ### Goals
 
 `uinix-theme` aims to
-- be fully configurable.  Your theme your rules 🤘.
-- be JS-first.  APIs are framework-agnostic.  Just plain old Javascript.
-- be simple.  There's not much to `uinix-theme` and it intends to stay update-free.
-- adhere to the [Unix philosophy].  `uinix-theme` programs do one thing and one thing well.  Non-theme infra and APIs (e.g. resolving themed styles and variants) are not part of the project's responsibility.
+
+- be fully configurable. Your theme your rules 🤘.
+- be JS-first. APIs are framework-agnostic. Just plain old Javascript.
+- be simple. There's not much to `uinix-theme` and it intends to stay update-free.
+- be clear and adhere to the [Unix philosophy]. `uinix-theme` programs do one thing and one thing well. `uinix-theme` only deals with defining and creating the `theme` and `themeSpec`. Other features and use cases are left to implementors.
 
 ### Version
+
 `uinix-theme` adheres to [semver] starting at 1.0.0.
 
 ### Contribute
-Install dependencies with `npm i` and run tests with `npm test`.  You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
+
+Install dependencies with `npm i` and run tests with `npm test`. You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
 
 ### Related
+
 - [`uinix-js`][uinix-js]
 - [`uinix-ui`][uinix-ui]
 - [`theme-ui`][theme-ui]
@@ -220,6 +222,7 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [MIT][license] © [Chris Zhou][author]
 
 <!-- project -->
+
 [author]: https://github.com/chrisrzhou
 [license]: https://github.com/uinix-js/uinix-theme/blob/main/license
 [build]: https://github.com/uinix-js/uinix-theme/actions
@@ -234,7 +237,8 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [uinix-ui]: https://github.com/uinix-js/uinix-ui
 
 <!-- defs -->
-[ESM-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esm-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [semver]: https://semver.org/
 [typescript]: https://github.com/microsoft/TypeScript
