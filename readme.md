@@ -10,6 +10,7 @@ Fully configurable theme specs for building UIs.
 Your theme your rules 🤘.
 
 ## Contents
+
 - [Install](#install)
 - [Use](#use)
 - [API](#api)
@@ -42,6 +43,13 @@ Create a theme based on a theme spec by providing a partial theme.
 ```js
 import {createTheme} from 'uinix-theme';
 
+const themeSpec = {
+  colors: ['backgroundColor', 'color'],
+  opacities: ['opacity'],
+  shadows: ['boxShadow', 'textShadow'],
+  spacings: ['margin', 'padding'],
+};
+
 const theme = {
   colors: {
     brand: '#f00',
@@ -55,14 +63,7 @@ const theme = {
     m: 16,
     l: 32,
   },
-  invalidProperty: 'will be dropped',
-};
-
-const themeSpec = {
-  colors: ['backgroundColor', 'color'],
-  opacities: ['opacity'],
-  shadows: ['boxShadow', 'textShadow'],
-  spacings: ['margin', 'padding'],
+  invalidProperty: 'will be dropped because it does not exist in the themeSpec',
 };
 
 createTheme(theme, themeSpec);
@@ -89,6 +90,7 @@ createTheme(theme, themeSpec);
 ## API
 
 This package has no default export and exports the following identifiers:
+
 - `createTheme`
 - `defaultThemeSpec`
 
@@ -103,11 +105,13 @@ See [§ Infrastructure](#infrastructure) for definitions, concepts, and componen
 - `themeSpec` (`ThemeSpec`, optional) — Object of theme properties and CSS properties.
 
 ###### Returns
-- `Theme` — Returns a theme based on the provided `theme` and `themeSpec`.  Invalid theme properties not specified on the `themeSpec` are dropped out.
+
+- `Theme` — Returns a theme based on the provided `theme` and `themeSpec`. Invalid theme properties not specified on the `themeSpec` are dropped out.
 
 ### `defaultThemeSpec`
 
 ###### Value
+
 - `ThemeSpec` — The default [uinix][uinix-js] theme spec.
 
 ## Infrastructure
@@ -116,13 +120,14 @@ This section describes the definitions, concepts, and components used throughout
 
 ### Theme
 
-A theme is a JS object that relates theme properties with CSS values.  The following is an example of organizing CSS color values under the `colors` theme property.
+A theme is a JS object that relates theme properties with CSS values. The following is an example of organizing CSS color values under the `colors` theme property.
 
 ```js
 const theme = {
   colors: {
     brand: '#f00',
-    background: { // can be arbitrarily nested
+    background: {
+      // can be arbitrarily nested
       primary: '#fff',
       secondary: '#ccc',
     },
@@ -130,9 +135,9 @@ const theme = {
 };
 ```
 
-With a theme, we can access CSS values statically without hardcoding them (e.g. `theme.colors.background.primary` instead of `'#f00'`).
+With a theme, we can access CSS values statically without hardcoding them (e.g. `theme.colors.background.primary` instead of `'#fff'`).
 
-We can whitelist CSS properties to be *theme-aware* using a theme spec, as detailed in the next section.
+We can whitelist CSS properties to be _theme-aware_ by using a theme spec, as detailed in the next section.
 
 ### Theme spec
 
@@ -140,15 +145,11 @@ A theme spec is a JS object that relates theme properties in a theme with CSS pr
 
 ```js
 const themeSpec = {
-  colors: [
-    'backgroundColor',
-    'borderColor',
-    'color',
-  ],
+  colors: ['backgroundColor', 'borderColor', 'color'],
 };
 ```
 
-In the example above, the CSS properties `backgroundColor`, `borderColor`, `color` would be aware of the CSS values defined in `theme.colors`.  The theme spec uses a whitelist strategy and unspecified CSS properties are not be theme-aware.
+In the example above, the CSS properties `backgroundColor`, `borderColor`, `color` would be aware of the CSS values defined in `theme.colors`. The theme spec uses a whitelist strategy and unspecified CSS properties are not be theme-aware.
 
 ### Theme provider
 
@@ -160,7 +161,7 @@ For example, given the following `theme` and `themeSpec`,
 const theme = {
   colors: {
     brand: '#f00',
-    background: { // can be arbitrarily nested
+    background: {
       primary: '#fff',
       secondary: '#ccc',
     },
@@ -168,15 +169,11 @@ const theme = {
 };
 
 const themeSpec = {
-  colors: [
-    'backgroundColor',
-    'borderColor',
-    'color',
-  ],
+  colors: ['backgroundColor', 'color'],
 };
 ```
 
-A `themeProvider` may resolve the following themed style into a valid CSS style:
+A `themeProvider` may resolve the following themed style object into the appropriate CSS style object.
 
 ```js
 const themedStyle = {
@@ -195,7 +192,7 @@ themeProvider.resolve(themedStyle);
  */
 ```
 
-> **Note:** `uinix-theme` does not implement a theme provider.  You may refer to [`uinix-ui`][uinix-ui] for an implementation.
+> **Note:** `uinix-theme` does not implement a theme provider. You may refer to [`uinix-ui`][uinix-ui] for an implementation.
 
 ## Project
 
@@ -212,12 +209,14 @@ themeProvider.resolve(themedStyle);
 - be simple, clear and update-free.  No one enjoys keeping up with dependencies, and the project's ultimate goal is to arrive to a stable API.
 
 ### Version
+
 `uinix-theme` adheres to [semver] starting at 1.0.0.
 
 ### Contribute
 Install dependencies with `npm i` and run tests with `npm test` (Node 18 required).  You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
 
 ### Related
+
 - [`uinix-js`][uinix-js]
 - [`uinix-ui`][uinix-ui]
 - [`fela`][fela]
@@ -228,6 +227,7 @@ Install dependencies with `npm i` and run tests with `npm test` (Node 18 require
 [MIT][license] © [Chris Zhou][author]
 
 <!-- project -->
+
 [author]: https://github.com/chrisrzhou
 [license]: https://github.com/uinix-js/uinix-theme/blob/main/license
 [build]: https://github.com/uinix-js/uinix-theme/actions
