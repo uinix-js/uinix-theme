@@ -5,7 +5,7 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][bundle-size-badge]][bundle-size]
 
-With `uinix-theme`, you can configure your own theme and specs for building UIs.
+Fully configurable theme specs for building UIs.
 
 Your theme your rules 🤘.
 
@@ -15,11 +15,12 @@ Your theme your rules 🤘.
 - [API](#api)
   - [`createTheme(theme, themeSpec)`](#createthemetheme-themespec)
   - [`defaultThemeSpec`](#defaultthemespec)
-- [Glossary](#glossary)
+- [Infrastructure](#infrastructure)
   - [Theme](#theme)
   - [Theme spec](#theme-spec)
   - [Theme provider](#theme-provider)
 - [Project](#project)
+  - [Origins](#origins)
   - [Goals](#goals)
   - [Version](#version)
   - [Contribute](#contribute)
@@ -93,11 +94,13 @@ This package has no default export and exports the following identifiers:
 
 APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the source code.
 
+See [§ Infrastructure](#infrastructure) for definitions, concepts, and components referenced throughout this section.
+
 ### `createTheme([theme, themeSpec])`
 
 ###### Parameters
-- `theme` (`Theme`, optional) — Object of theme property and (nested) theme property definitions resolving to CSS values.
-- `themeSpec` (`ThemeSpec`, optional) — Object of theme property and CSS properties.
+- `theme` (`Theme`, optional) — Object of theme properties and (nested) theme property definitions resolving to CSS values.
+- `themeSpec` (`ThemeSpec`, optional) — Object of theme properties and CSS properties.
 
 ###### Returns
 - `Theme` — Returns a theme based on the provided `theme` and `themeSpec`.  Invalid theme properties not specified on the `themeSpec` are dropped out.
@@ -107,7 +110,9 @@ APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the sour
 ###### Value
 - `ThemeSpec` — The default [uinix][uinix-js] theme spec.
 
-## Glossary
+## Infrastructure
+
+This section describes the definitions, concepts, and components used throughout the documentation.
 
 ### Theme
 
@@ -194,25 +199,28 @@ themeProvider.resolve(themedStyle);
 
 ## Project
 
-`uinix-theme` is inspired by [`theme-ui`][theme-ui] but approaches UI theming in a fundamentally different way as detailed in the next section.
+### Origins
+
+`uinix-theme` is originally inspired by [`theme-ui`][theme-ui], but its API is built to be simple, agnostic, and fully configurable. `uinix-theme` borrows many ideas and principles from [`fela`][fela].
 
 ### Goals
 
 `uinix-theme` aims to
 - be fully configurable.  Your theme your rules 🤘.
-- be JS-first.  APIs are framework-agnostic.  Just plain old Javascript.
-- be simple.  There's not much to `uinix-theme` and it intends to stay update-free.
-- adhere to the [Unix philosophy].  `uinix-theme` programs do one thing and one thing well.  Non-theme infra and APIs (e.g. resolving themed styles and variants) are not part of the project's responsibility.
+- be JS-first and framework-agnostic.  Just plain old Javascript.
+- adhere to the [Unix philosophy].  Programs are modular and composable; do one thing; and do them well.
+- be simple, clear and update-free.  No one enjoys keeping up with dependencies, and the project's ultimate goal is to arrive to a stable API.
 
 ### Version
 `uinix-theme` adheres to [semver] starting at 1.0.0.
 
 ### Contribute
-Install dependencies with `npm i` and run tests with `npm test`.  You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
+Install dependencies with `npm i` and run tests with `npm test` (Node 18 required).  You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
 
 ### Related
 - [`uinix-js`][uinix-js]
 - [`uinix-ui`][uinix-ui]
+- [`fela`][fela]
 - [`theme-ui`][theme-ui]
 
 ### License
@@ -235,6 +243,7 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 
 <!-- defs -->
 [ESM-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+[fela]: https://github.com/robinweser/fela
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [semver]: https://semver.org/
 [typescript]: https://github.com/microsoft/TypeScript
