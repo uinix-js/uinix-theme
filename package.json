@@ -31,7 +31,15 @@
     "index.d.ts"
   ],
   "exports": "./index.js",
-  "dependencies": {},
+  "dependencies": {
+    "fela": "^12.1.2",
+    "fela-dom": "^12.1.2",
+    "fela-enforce-longhands": "^12.1.2",
+    "fela-monolithic": "^12.1.2",
+    "fela-plugin-responsive-value": "^12.1.2",
+    "fela-preset-web": "^12.1.2",
+    "uinix-fp": "^1.0.2"
+  },
   "devDependencies": {
     "c8": "^7.11.2",
     "rimraf": "^3.0.2",
@@ -40,7 +48,7 @@
     "xo": "^0.48.0"
   },
   "scripts": {
-    "build": "npm run clean && tsc && type-coverage",
+    "build": "npm run clean",
     "clean": "rimraf index.d.ts {lib,test}/**/*.d.ts",
     "lint": "xo --fix",
     "test-coverage": "c8 --check-coverage --all --100 --reporter lcov node --test test/index.js",
