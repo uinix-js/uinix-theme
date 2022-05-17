@@ -41,11 +41,11 @@
     "uinix-fp": "^1.0.2"
   },
   "devDependencies": {
-    "c8": "^7.11.2",
+    "c8": "^7.11.3",
     "rimraf": "^3.0.2",
     "type-coverage": "^2.21.1",
     "typescript": "^4.6.4",
-    "xo": "^0.48.0"
+    "xo": "^0.49.0"
   },
   "scripts": {
     "build": "npm run clean",
