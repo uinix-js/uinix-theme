@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import test from 'node:test';
 
 import {createThemeRenderer} from '../index.js';
-import {resolveRenderStyle} from './util.js';
+import {resolveRenderStaticStyles, resolveRenderStyle} from './util.js';
 
 test('createThemeRenderer', async (t) => {
   await t.test('renderer.render', (t) => {
@@ -10,6 +10,96 @@ test('createThemeRenderer', async (t) => {
     t.test('should run the render method', () => {
       const renderer = createThemeRenderer();
       assert.throws(() => renderer.render());
+    });
+  });
+
+  await t.test('renderer.renderStaticStyles', async (t) => {
+    await t.test('should render static style', () => {
+      assert.deepEqual(
+        resolveRenderStaticStyles({
+          html: {
+            color: 'white',
+          },
+          body: {
+            color: 'red',
+          },
+          'a:hover': {
+            color: 'blue',
+          },
+        }),
+        [
+          {
+            css: 'color:white',
+            selector: 'html',
+            type: 'STATIC',
+          },
+          {
+            css: 'color:red',
+            selector: 'body',
+            type: 'STATIC',
+          },
+          {
+            css: 'color:blue',
+            selector: 'a:hover',
+            type: 'STATIC',
+          },
+        ],
+      );
+    });
+
+    await t.test('should render themed static style', () => {
+      assert.deepEqual(
+        resolveRenderStaticStyles(
+          {
+            'a:hover': {
+              color: 'brand.primary',
+            },
+          },
+          {
+            theme: {
+              colors: {
+                brand: {
+                  primary: 'red',
+                },
+              },
+            },
+            themeSpec: {
+              colors: ['color'],
+            },
+          },
+        ),
+        [
+          {
+            css: 'color:red',
+            selector: 'a:hover',
+            type: 'STATIC',
+          },
+        ],
+      );
+    });
+
+    // Inverted when https://github.com/robinweser/fela/issues/876 is resolved
+    await t.test('should NOT render responsive static style', () => {
+      assert.deepEqual(
+        resolveRenderStaticStyles(
+          {
+            'a:hover': {
+              color: ['red', 'green', 'blue'],
+            },
+          },
+          {
+            responsiveCssProperties: ['color'],
+            responsiveBreakpoints: ['100px', '800px'],
+          },
+        ),
+        [
+          {
+            css: 'color:red',
+            selector: 'a:hover',
+            type: 'STATIC',
+          },
+        ],
+      );
     });
   });
 
