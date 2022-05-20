@@ -48,8 +48,9 @@
     "xo": "^0.49.0"
   },
   "scripts": {
-    "build": "npm run clean",
-    "clean": "rimraf index.d.ts {lib,test}/**/*.d.ts",
+    "build": "npm run clean && tsc && type-coverage",
+    "clean": "npm run clear:typings && npm run clear:typings",
+    "clear:typings": "rimraf index.d.ts {lib,test}/**/*.d.ts",
     "lint": "xo --fix",
     "test-coverage": "c8 --check-coverage --all --100 --reporter lcov node --test test/index.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
@@ -65,8 +66,9 @@
   "typeCoverage": {
     "atLeast": 100,
     "detail": true,
+    "ignoreFiles": "test/*.js",
     "strict": true,
-    "ignore-files": "test/*.js"
+    "suppressError": true
   },
   "xo": {
     "esnext": false,
