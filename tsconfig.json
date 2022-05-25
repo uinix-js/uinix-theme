@@ -6,7 +6,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "lib": ["es2020"],
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "module": "es2020",
     "skipLibCheck": true,
     "strict": true,
