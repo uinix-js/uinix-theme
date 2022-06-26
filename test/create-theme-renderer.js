@@ -1005,23 +1005,4 @@ test('createThemeRenderer', async (t) => {
       );
     });
   });
-
-  await t.test('renderer.subscribe', (t) => {
-    t.test('should run the subscribed listener', () => {
-      const renderer = createThemeRenderer();
-
-      let captured;
-      const listener = (update) => {
-        captured = update;
-      };
-
-      renderer.subscribe(listener);
-      renderer.renderStyle({
-        color: 'blue',
-        padding: '12px',
-      });
-
-      assert.deepEqual(captured.declaration, 'color:blue;padding:12px');
-    });
-  });
 });

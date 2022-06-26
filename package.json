@@ -1,7 +1,7 @@
 {
   "name": "uinix-theme",
-  "version": "1.1.0",
-  "description": "Configurable theme spec and utilties.  Your theme, your rules 🤘.",
+  "version": "2.0.0",
+  "description": "Fully configurable framework-agnostic theme system (theme spec, theme, theme renderer) for building UIs.",
   "license": "MIT",
   "keywords": [
     "uinix",
@@ -37,14 +37,14 @@
     "fela-monolithic": "^12.1.2",
     "fela-plugin-responsive-value": "^12.1.2",
     "fela-preset-web": "^12.1.2",
-    "uinix-fp": "^1.0.2"
+    "uinix-fp": "^1.1.0"
   },
   "devDependencies": {
     "c8": "^7.11.3",
     "rimraf": "^3.0.2",
     "type-coverage": "^2.21.1",
-    "typescript": "^4.7.2",
-    "xo": "^0.49.0"
+    "typescript": "^4.7.4",
+    "xo": "^0.50.0"
   },
   "scripts": {
     "build": "npm run clean && tsc && type-coverage",

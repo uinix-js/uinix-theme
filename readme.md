@@ -5,18 +5,19 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][bundle-size-badge]][bundle-size]
 
-Fully configurable theme system (theme spec, theme renderer, utilities) for building UIs.
+Fully configurable framework-agnostic theme system (theme spec, theme, theme renderer) for building UIs.
 
 Your theme your rules 🤘.
 
+Visit the [Theme Playground] for interactive demos.
+
 ## Features
 
+- Fully configurable theme system (theme spec, theme, theme renderer)
+- Framework-agnostic
 - Modern CSS-in-JS features
-- Themable styles
+- Themable styles (including animations, images, filters)
 - Responsive styles
-- Fully configurable
-- Framework-agnostic (JS-first)
-- Update-free
 
 ## Contents
 
@@ -25,16 +26,16 @@ Your theme your rules 🤘.
   - [Create a theme spec](#create-a-theme-spec)
   - [Create a theme](#create-a-theme)
   - [Create a theme renderer](#create-a-theme-renderer)
-  - [Rendering style objects](#rendering-style-objects)
-  - [Rendering style rules](#rendering-style-rules)
-  - [Rendering responsive styles](#rendering-responsive-styles)
-  - [Rendering atomic styles](#rendering-atomic-styles)
-  - [Playground](#playground)
+  - [Render style objects](#render-style-objects)
+  - [Render style rules](#render-style-rules)
+  - [Render responsive styles](#render-responsive-styles)
+  - [Render atomic styles](#render-atomic-styles)
+  - [Render static styles](#render-static-styles)
 - [API](#api)
-  - [`combineStyles(styles)`](#combinestylesstyles)
-  - [`createTheme([theme][, themeSpec])`](#createthemetheme-themespec)
-  - [`createThemeRenderer([options])`](#createthemerendereroptions)
-  - [`defaultThemeSpec`](#defaultthemespec)
+  - [`combineStyles(styles) => style`](#combinestylesstyles--style)
+  - [`createTheme(theme?, themeSpec?) => theme`](#createthemetheme-themespec--theme)
+  - [`createThemeRenderer(options?) => renderer`](#createthemerendereroptions--renderer)
+- [Theme specs](#theme-specs)
 - [Project](#project)
   - [Origins](#origins)
   - [Goals](#goals)
@@ -53,24 +54,24 @@ npm install uinix-theme
 
 ## Use
 
-This section provides basic examples on using `uinix-theme`.  Please refer to the [§ API](#api) section for technical documentation.
+This section provides basic examples on using `uinix-theme`.  Please refer to the [§ API](#api) section for comprehensive documentation.  You may visit the [Theme Playground] if you prefer an interactive exploration.
 
 ### Create a theme spec
 
 A theme spec is an object relating theme properties (keys) and CSS properties (values).
 
-Import the default `uinix` theme spec with:
+You can import supported [theme specs](#theme-specs).
 
 ```js
-import {defaultThemeSpec} from 'uinix-theme';
+import themeSpec from 'uinix-theme-spec';
 
-console.log(defaultThemeSpec)
+console.log(themeSpec);
 ```
 
 Yields:
 
 ```js
-const defaultThemeSpec = {
+const themeSpec = {
   'animations': ['animation'],
   'backgrounds': ['background'],
   ...
@@ -86,7 +87,7 @@ const defaultThemeSpec = {
 }
 ```
 
-You can also create your theme specs and customize specific theme properties and CSS properties.
+Or, you can create your own theme spec by specifying the relationships of theme properties and CSS properties.
 
 ```js
 const themeSpec = {
@@ -120,7 +121,7 @@ const theme = createTheme({}, themeSpec);
 console.log(theme);
 ```
 
-Yields an empty theme:
+Yields an empty theme using the custom theme spec we created earlier.
 
 ```js
 const theme = {
@@ -154,9 +155,11 @@ Yields:
 
 ```js
 const theme = {
-  brand: {
-    primary: 'red',
-    link: 'blue',
+  colors: {
+    brand: {
+      primary: 'red',
+      link: 'blue',
+    },
   },
   space: {
     s: 4,
@@ -182,17 +185,18 @@ const renderer = createThemeRenderer({
 });
 ```
 
-Initialize the theme renderer anywhere in your code with:
+Initialize the theme renderer in a single entry point in your code.
 
 ```js
 renderer.render();
 ```
 
-### Rendering style objects
+### Render style objects
 
-Render a themed style object (modern CSS-in-JS features supported) with:
+Render a themed style object with:
 
 ```js
+// supports modern CSS-in-JS features (e.g. PostCSS selectors)
 const style = {
   color: 'brand.primary',
   padding: 'm',
@@ -220,7 +224,7 @@ Yields the following rendered CSS
 
 > **Note**: Themed styles are resolved by checking the theme values (e.g. `brand.primary`) against its assigned CSS properties (e.g. `color`).  The resolved style value is looked up in the provided `theme` (e.g. via `theme.colors`) and confirmed that the CSS property (e.g. `color`) is registered in the provided `themeSpec`.
 
-### Rendering style rules
+### Render style rules
 
 Render a themed style rule (function) with:
 
@@ -242,9 +246,9 @@ Yields the following rendered CSS
 }
 ```
 
-> **Note:** Style rules encourages modeling styles as a function of state, and improves composition and testing strategies.
+> **Note:** This allows us to express styles as a simple functions of state, providing strategies for composition and testing.
 
-### Rendering responsive styles
+### Render responsive styles
 
 Responsive styles are easily supported by configuring the theme renderer appropriately.
 
@@ -291,7 +295,7 @@ Yields the following rendered CSS
 
 > **Note:** While `color` was specified in `responsiveStyle`, it is not resolved because it was not explicitly whitelisted in `options.responsiveCssProperties`.
 
-### Rendering atomic styles
+### Render atomic styles
 
 If you would like the renderer to render styles as [atomic CSS], configure this appropriately with:
 
@@ -310,7 +314,7 @@ const style = {
 };
 ```
 
-Yields the following rendered CSS
+Yields the following rendered atomic CSS classes
 
 ```css
 .x {
@@ -322,9 +326,31 @@ Yields the following rendered CSS
 }
 ```
 
-### Playground
+> **Note:** We recommend enabling atomic styles in production apps as a scalable solution to share CSS.  Disabling atomic styles in development is recommended to improve debugging experience.
 
-Please visit the [Theme Playground] to play with `uinix-theme`!
+### Render static styles
+
+You can render static styles to the as global CSS styles with:
+
+```js
+const style = {
+  body: {
+    color: 'brand.primary',
+    padding: 'm',
+  },
+  '*': {
+    boxSizing: 'border-box',
+  },
+  'a:hover': {
+    color: 'brand.link',
+    padding: 's',
+  },
+};
+
+renderer.renderStaticStyles(style);
+```
+
+> **Note:** `renderer.renderStaticStyles` currently does not support nested PostCSS selectors and this will be supported in the near future.  It still supports themed styles.
 
 ## API
 
@@ -333,11 +359,10 @@ Please visit the [Theme Playground] to play with `uinix-theme`!
 - `combineStyles`
 - `createTheme`
 - `createThemeRenderer`
-- `defaultThemeSpec`
 
 APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the source code.
 
-### `combineStyles(styles)`
+### `combineStyles(styles) => style`
 
 Combines an array of style objects or rules and returns a single composed style rule.
 
@@ -349,10 +374,11 @@ An array of `StyleObject` or `StyleRule`.
 
 ##### Returns
 
-###### `StyleRule`
+###### `style` (`StyleRule`)
 A single composed style rule.
 
-##### Example
+<details>
+<summary>Example</summary>
 
 ```js
 const rule1 = props => ({
@@ -375,10 +401,11 @@ const combinedRule = props => ({
   color: 'blue',
 });
 ```
+</details>
 
-### `createTheme([theme, themeSpec])`
+### `createTheme(theme?, themeSpec?) => theme`
 
-Creates a validated theme object based on the provided theme and theme spec.  Theme properties not specified on the theme spec are considered invalid and are not included in the return value.
+Creates a validated theme object based on the provided theme and theme spec.  Theme properties not specified on the theme spec are considered invalid and are not included in the returned theme.
 
 ##### Parameters
 
@@ -386,16 +413,16 @@ Creates a validated theme object based on the provided theme and theme spec.  Th
 
 An object relating theme properties (keys) and theme property definitions (values).
 
-###### `themeSpec` (`ThemeSpec`, optional, default: `defaultThemeSpec`)
+###### `themeSpec` (`ThemeSpec`, optional, default: `{}`)
 
 An object relating theme properties (keys) and CSS properties (values).
 
 ##### Returns
 
-###### `Theme`
+###### `theme` (`Theme`)
 A validated theme object based on the provided theme spec.
 
-### `createThemeRenderer([options])`
+### `createThemeRenderer(options?) => renderer`
 
 Creates a theme renderer to resolve themed styles based on the provided theme and theme spec, and render the resolved styles to the DOM.
 
@@ -407,37 +434,61 @@ Enables rendering styles as [atomic CSS].
 
 ###### `options.responsiveBreakpoints` (`Array<string>`, optional, default: `[]`)
 
-Configure this to support responsive styling based on the provided breakpoints.  Breakpoints are min-width-based media queries.
+Configure this to support responsive styling based on the provided breakpoints.  Breakpoints are `min-width`-based media queries.
 
 ###### `options.responsiveCssProperties` (`Array<string>`, optional, default: `[]`)
 
-Responsive styling requires explicitly whitelisting CSS properties that should be *responsive-aware*.
+Responsive styling requires explicitly whitelisting the corresponding responsive CSS properties.
 
-###### `options.themeSpec` (`ThemeSpec`, optional, default: `defaultThemeSpec`)
+###### `options.themeSpec` (`ThemeSpec`, optional, default: `{}`)
 
 Provide a custom theme spec.
 
-###### `options.theme` (`Theme`, optional, default: `createTheme({}, defaultThemeSpec)`)
+###### `options.theme` (`Theme`, optional, default: `createTheme()`)
 
 Provide a custom theme.
 
 ##### Returns
 
-###### `ThemeRenderer`
+###### `renderer` (`ThemeRenderer`)
 
-Returns a renderer with methods to resolve and render themed/responsive styles to the DOM.
+Returns a theme renderer with methods to resolve and render themed/responsive styles to the DOM.
 
-- `renderer.render()`: Initializes and renders the renderer to the DOM.
-- `renderer.renderStyles(style[, props])`: Resolves and renders the provided style (object or rule).  Accepts optional props.
+- `renderer.render()`: Initializes the renderer.
+- `renderer.renderStyles(style, props?)`: Resolves and renders the provided style (object or rule).  Accepts optional props.
 - `renderer.renderStaticStyles(style)`: Resolves and renders the provided static style object.
 
-### `defaultThemeSpec`
+## Theme Specs
 
-The default `uinix` theme spec.
+The following are theme-specs usable by `uinix-theme`.
+- [`uinix-theme-spec`][uinix-theme-spec]: the default `uinix-theme` spec.
+- [`uinix-theme-spec-theme-ui`][uinix-theme-spec-theme-ui]: the [`theme-ui`][theme-ui] spec usable in `uinix-theme`.
 
-##### Value
+<details>
+<summary>Example</summary>
 
-###### `ThemeSpec`
+```js
+import {createTheme} from 'uinix-theme';
+import themeSpec from 'uinix-theme-spec';
+
+const theme = createTheme({
+  colors: {
+    brand: {
+      primary: 'red',
+      link: 'blue',
+    },
+  },
+  spacings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+}, themeSpec);
+
+console.log(theme);
+```
+
+</details>
 
 ## Project
 
@@ -447,16 +498,19 @@ The default `uinix` theme spec.
 
 ### Goals
 
-`uinix-theme` aims to
-- provide a functional, minimal, and configurable theming solution for framework-agnostic development.  Your theme your rules 🤘.
-- adhere to the [uinix philosophy].
+`uinix-theme`:
+- adheres to the [uinix philosophy].
+- aims to provide a functional, minimal, and configurable theming solution for framework-agnostic UI development.
 
 ### Version
 
 `uinix-theme` adheres to [semver] starting at 1.0.0.
 
 ### Contribute
-Install dependencies with `npm i` and run tests with `npm test` (Node 18 required).  You can also run other NPM scripts (e.g. `lint`) from the root of the repo.
+
+Node 18+ is required for development.
+
+Install dependencies with `npm i` and run tests with `npm test`.  You can also run other NPM scripts (e.g. `lint`) from the root of the monorepo.
 
 ### Related
 
@@ -483,6 +537,8 @@ Install dependencies with `npm i` and run tests with `npm test` (Node 18 require
 [bundle-size-badge]: https://img.shields.io/bundlephobia/minzip/uinix-theme.svg
 [uinix-js]: https://github.com/uinix-js/
 [uinix philosophy]: https://github.com/uinix-js#the-uinix-philosophy
+[uinix-theme-spec]: https://github.com/uinix-js/uinix-theme-spec
+[uinix-theme-spec-theme-ui]: https://github.com/uinix-js/uinix-theme-spec-theme-ui
 [uinix-ui]: https://github.com/uinix-js/uinix-ui
 
 <!-- defs -->
@@ -492,5 +548,5 @@ Install dependencies with `npm i` and run tests with `npm test` (Node 18 require
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
-[theme playground]: https://uinix.dev/demos/theme-playground
+[theme playground]: https://uinix.dev/tools/uinix-theme-playground
 [typescript]: https://github.com/microsoft/TypeScript

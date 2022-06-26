@@ -4,7 +4,7 @@ import test from 'node:test';
 import {coerceEsm} from '../lib/utils/coerce-esm.js';
 
 /**
- * This test will be removed once dependencies are ESM-only.
+ * TODO: This test will be removed once dependencies are ESM-only.
  */
 test('coerceEsm', async (t) => {
   await t.test('should return x if x has no ".default" attribute', () => {

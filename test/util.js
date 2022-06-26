@@ -14,7 +14,7 @@ export const resolveRenderStaticStyles = (staticStyles, options = {}) => {
     actual.push(filterEntries(filterEntry)(update));
   };
 
-  const subscription = renderer.subscribe(listener);
+  const subscription = renderer._subscribe(listener);
   renderer.renderStaticStyles(staticStyles);
   subscription.unsubscribe();
 
@@ -33,7 +33,7 @@ export const resolveRenderStyle = (style, styleProps = {}, options = {}) => {
     actual.push(filterEntries(filterEntry)(update));
   };
 
-  const subscription = renderer.subscribe(listener);
+  const subscription = renderer._subscribe(listener);
   renderer.renderStyle(style, styleProps);
   subscription.unsubscribe();
 
