@@ -1005,29 +1005,32 @@ test('createThemeRenderer', async (t) => {
       );
     });
 
-    await t.test('should apply the provided classNamePrefix', () => {
-      const style = {
-        color: 'blue',
-        padding: '12px',
-      };
-      const classNamePrefix = 'a-zA-Z0-9-_';
+    await t.test(
+      'should prepend the provided namespace before the rendered CSS classnames',
+      () => {
+        const style = {
+          color: 'blue',
+          padding: '12px',
+        };
+        const namespace = 'a-zA-Z0-9-_';
 
-      assert.equal(
-        createThemeRenderer({classNamePrefix}).renderStyle(style),
-        classNamePrefix + createThemeRenderer().renderStyle(style),
-      );
+        assert.equal(
+          createThemeRenderer({namespace}).renderStyle(style),
+          namespace + createThemeRenderer().renderStyle(style),
+        );
 
-      assert.equal(
-        createThemeRenderer({
-          classNamePrefix,
-          enableAtomicCss: true,
-        }).renderStyle(style),
-        createThemeRenderer({enableAtomicCss: true})
-          .renderStyle(style)
-          .split(' ')
-          .map((x) => classNamePrefix + x)
-          .join(' '),
-      );
-    });
+        assert.equal(
+          createThemeRenderer({
+            enableAtomicCss: true,
+            namespace,
+          }).renderStyle(style),
+          createThemeRenderer({enableAtomicCss: true})
+            .renderStyle(style)
+            .split(' ')
+            .map((x) => namespace + x)
+            .join(' '),
+        );
+      },
+    );
   });
 });
