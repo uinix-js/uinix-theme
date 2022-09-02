@@ -428,6 +428,10 @@ Creates a theme renderer to resolve themed styles based on the provided theme an
 
 ##### Parameters
 
+###### `options.classNamePrefix` (`string`, optional, default: `''`)
+
+Prepend a static prefix to every rendered CSS classname and keyframe. It must only consist of `a-zA-Z0-9-_` and start with `a-zA-Z_`.
+
 ###### `options.enableAtomicCss` (`boolean`, optional, default: `false`)
 
 Enables rendering styles as [atomic CSS].

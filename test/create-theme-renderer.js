@@ -1004,5 +1004,30 @@ test('createThemeRenderer', async (t) => {
         ],
       );
     });
+
+    await t.test('should apply the provided classNamePrefix', () => {
+      const style = {
+        color: 'blue',
+        padding: '12px',
+      };
+      const classNamePrefix = 'a-zA-Z0-9-_';
+
+      assert.equal(
+        createThemeRenderer({classNamePrefix}).renderStyle(style),
+        classNamePrefix + createThemeRenderer().renderStyle(style),
+      );
+
+      assert.equal(
+        createThemeRenderer({
+          classNamePrefix,
+          enableAtomicCss: true,
+        }).renderStyle(style),
+        createThemeRenderer({enableAtomicCss: true})
+          .renderStyle(style)
+          .split(' ')
+          .map((x) => classNamePrefix + x)
+          .join(' '),
+      );
+    });
   });
 });
