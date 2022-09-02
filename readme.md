@@ -454,6 +454,7 @@ Provide a custom theme.
 
 Returns a theme renderer with methods to resolve and render themed/responsive styles to the DOM.
 
+- `renderer.clear()`: Clears and removes all rendered CSS.
 - `renderer.render()`: Initializes the renderer.
 - `renderer.renderStyles(style, props?)`: Resolves and renders the provided style (object or rule).  Accepts optional props.
 - `renderer.renderStaticStyles(style)`: Resolves and renders the provided static style object.
@@ -548,5 +549,5 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
-[theme playground]: https://uinix.dev/tools/uinix-theme-playground
+[theme playground]: https://uinix.dev/demos/theme-playground
 [typescript]: https://github.com/microsoft/TypeScript
