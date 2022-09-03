@@ -5,19 +5,21 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][bundle-size-badge]][bundle-size]
 
-Fully configurable framework-agnostic theme system (theme spec, theme, theme renderer) for building UIs.
+Fully configurable framework-agnostic theme system (theme spec, theme, theme renderer, themed styles/keyframes/CSS-variables) for building UIs.
 
 Your theme your rules 🤘.
 
-Visit the [Theme Playground] for interactive demos.
+Visit the [Theme Playground] for interactive demos or read the [guides] at the official documentation website.
 
 ## Features
 
-- Fully configurable theme system (theme spec, theme, theme renderer)
-- Framework-agnostic
-- Modern CSS-in-JS features
-- Themable styles (including animations, images, filters)
-- Responsive styles
+- Fully configurable theme system and spec.
+- Framework-agnostic.
+- Modern CSS-in-JS features.
+- Themed [CSS variables].
+- Themed styles (including animations, images, filters).
+- Responsive styles.
+- [Atomic CSS] styles.
 
 ## Contents
 
@@ -33,6 +35,7 @@ Visit the [Theme Playground] for interactive demos.
   - [Render static styles](#render-static-styles)
 - [API](#api)
   - [`combineStyles(styles) => style`](#combinestylesstyles--style)
+  - [`createCssVariables(theme?, options?) => object`](#createcssvariablestheme-options--object)
   - [`createTheme(theme?, themeSpec?) => theme`](#createthemetheme-themespec--theme)
   - [`createThemeRenderer(options?) => renderer`](#createthemerendereroptions--renderer)
 - [Theme specs](#theme-specs)
@@ -54,7 +57,9 @@ npm install uinix-theme
 
 ## Use
 
-This section provides basic examples on using `uinix-theme`.  Please refer to the [§ API](#api) section for comprehensive documentation.  You may visit the [Theme Playground] if you prefer an interactive exploration.
+This section provides basic examples on using `uinix-theme`.  Please refer to the [§ API](#api) section for comprehensive documentation.
+
+You may visit the [Theme Playground] if you prefer an interactive exploration or learn more from reading the [guides] on the official documentation website.
 
 ### Create a theme spec
 
@@ -357,6 +362,7 @@ renderer.renderStaticStyles(style);
 `uinix-theme` has no default export, and exports the following identifiers:
 
 - `combineStyles`
+- `createCssVariables`
 - `createTheme`
 - `createThemeRenderer`
 
@@ -401,6 +407,60 @@ const combinedRule = props => ({
   color: 'blue',
 });
 ```
+</details>
+
+### `createCssVariables(theme?, options?) => object`
+
+Creates an object of [CSS Variables] from the provided theme.  CSS variables are validly named based on the flattened property path of the potentially nested theme.
+
+##### Parameters
+
+###### `theme` (`Theme`, optional, default: `{}`)
+
+An object relating theme properties (keys) and theme property definitions (values).
+
+###### `options.namespace` (`string`, optional, default: `''`)
+
+##### Returns
+
+###### `object` (`Object`)
+An object containing resolved [CSS variables].
+
+<details>
+<summary>Example</summary>
+
+Given the following `theme` and optional `namespace`,
+
+```js
+import {createCssVariables} from 'uinix-theme';
+
+const theme = {
+  colors: {
+    brand: {
+      primary: 'blue',
+    },
+  },
+  spacings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+};
+
+const cssVariables = createCssVariables(theme, {namespace: 'uinix-'});
+```
+
+Yields the following object of CSS variables.
+
+```js
+const cssVariables = {
+  '--uinix-colors-brand-primary': 'blue',
+  '--uinix-spacings-s': 4,
+  '--uinix-spacings-m': 8,
+  '--uinix-spacings-l': 16,
+};
+```
+
 </details>
 
 ### `createTheme(theme?, themeSpec?) => theme`
@@ -548,8 +608,10 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 
 <!-- defs -->
 [atomic css]: https://css-tricks.com/lets-define-exactly-atomic-css/
+[CSS variables]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
 [ESM-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 [fela]: https://github.com/robinweser/fela
+[guides]: https://uinix.dev/packages/uinix-theme
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
