@@ -16,10 +16,11 @@ Visit the [Theme Playground] for interactive demos or read the [guides] at the o
 - Fully configurable theme system and spec.
 - Framework-agnostic.
 - Modern CSS-in-JS features.
-- Themed [CSS variables].
-- Themed styles (including animations, images, filters).
 - Responsive styles.
-- [Atomic CSS] styles.
+- [Atomic CSS] supported.
+- Themable [CSS variables].
+- Themable [CSS keyframes].
+- Themable styles (any CSS property!).
 
 ## Contents
 
@@ -49,10 +50,22 @@ Visit the [Theme Playground] for interactive demos or read the [guides] at the o
 
 ## Install
 
-This package is [ESM-only] and requires Node 12+.
+This package is [ESM-only] and requires Node 12+.  Install in Node with [npm]:
 
 ```sh
 npm install uinix-theme
+```
+
+Install in [Deno] with [esm.sh]:
+```js
+import {...} from 'https://esm.sh/uinix-theme'
+```
+
+Install in browsers with [esm.sh]:
+```html
+<script type="module">
+  import {...} from 'https://esm.sh/uinix-theme'
+</script>
 ```
 
 ## Use
@@ -589,7 +602,6 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [MIT][license] © [Chris Zhou][author]
 
 <!-- project -->
-
 [author]: https://github.com/chrisrzhou
 [license]: https://github.com/uinix-js/uinix-theme/blob/main/license
 [build]: https://github.com/uinix-js/uinix-theme/actions
@@ -608,11 +620,15 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 
 <!-- defs -->
 [atomic css]: https://css-tricks.com/lets-define-exactly-atomic-css/
+[CSS keyframes]: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes
 [CSS variables]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
+[deno]: https://deno.land/
+[esm.sh]: https://esm.sh/
 [ESM-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 [fela]: https://github.com/robinweser/fela
 [guides]: https://uinix.dev/packages/uinix-theme
 [jsdoc]: https://github.com/jsdoc/jsdoc
+[npm]: https://docs.npmjs.com/cli/v8/commands/npm-install
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
 [theme playground]: https://uinix.dev/demos/theme-playground
