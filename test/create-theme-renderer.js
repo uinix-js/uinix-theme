@@ -101,6 +101,126 @@ test('createThemeRenderer', async (t) => {
         ],
       );
     });
+
+    await t.test('should render theme as css variables under `:root`', () => {
+      assert.deepEqual(
+        resolveRenderStaticStyles(
+          {},
+          {
+            enableCssVariables: true,
+            theme: {
+              colors: {
+                brand: {
+                  primary: 'red',
+                  secondary: 'rgba(0, 0, 0, 0.2)',
+                },
+              },
+              spacings: {
+                s: 4,
+                m: 8,
+                l: 16,
+              },
+            },
+            themeSpec: {
+              colors: ['color'],
+              spacings: ['padding'],
+            },
+          },
+        ),
+        [
+          {
+            css: '--colors-brand-primary:red;--colors-brand-secondary:rgba(0, 0, 0, 0.2);--spacings-s:4px;--spacings-m:8px;--spacings-l:16px',
+            selector: ':root',
+            type: 'STATIC',
+          },
+        ],
+      );
+    });
+
+    await t.test(
+      'should render theme as css variables under `:root` prefixed with provided namespace',
+      () => {
+        assert.deepEqual(
+          resolveRenderStaticStyles(
+            {},
+            {
+              enableCssVariables: true,
+              namespace: 'uinix_',
+              theme: {
+                colors: {
+                  brand: {
+                    primary: 'red',
+                  },
+                },
+                spacings: {
+                  m: 8,
+                },
+              },
+              themeSpec: {
+                colors: ['color'],
+                spacings: ['padding'],
+              },
+            },
+          ),
+          [
+            {
+              css: '--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              selector: ':root',
+              type: 'STATIC',
+            },
+          ],
+        );
+      },
+    );
+
+    await t.test(
+      'should merge css variables under :root with other static styles',
+      () => {
+        assert.deepEqual(
+          resolveRenderStaticStyles(
+            {
+              ':root': {
+                '--custom-css-var': '8px',
+                '--uinix_colors-brand-primary': 'should be overwritten',
+              },
+              a: {
+                color: 'brand.primary',
+              },
+            },
+            {
+              enableCssVariables: true,
+              namespace: 'uinix_',
+              theme: {
+                colors: {
+                  brand: {
+                    primary: 'red',
+                  },
+                },
+                spacings: {
+                  m: 8,
+                },
+              },
+              themeSpec: {
+                colors: ['color'],
+                spacings: ['padding'],
+              },
+            },
+          ),
+          [
+            {
+              css: '--custom-css-var:8px;--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              selector: ':root',
+              type: 'STATIC',
+            },
+            {
+              css: 'color:red',
+              selector: 'a',
+              type: 'STATIC',
+            },
+          ],
+        );
+      },
+    );
   });
 
   await t.test('renderer.renderStyle', async (t) => {
