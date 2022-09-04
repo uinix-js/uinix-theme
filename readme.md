@@ -424,7 +424,7 @@ const combinedRule = props => ({
 
 ### `createCssVariables(theme?, options?) => object`
 
-Creates an object of [CSS Variables] from the provided theme.  CSS variables are validly named based on the flattened property path of the potentially nested theme.
+Creates an object of [CSS variables] from the provided theme.  CSS variables are validly named based on the flattened property path of the potentially nested theme.
 
 ##### Parameters
 
@@ -500,10 +500,15 @@ A validated theme object based on the provided theme spec.
 Creates a theme renderer to resolve themed styles based on the provided theme and theme spec, and render the resolved styles to the DOM.
 
 ##### Parameters
-
 ###### `options.enableAtomicCss` (`boolean`, optional, default: `false`)
 
 Enables rendering styles as [atomic CSS].
+
+###### `options.enableCssVariables` (`boolean`, optional, default: `false`)
+
+When enabled, will support [CSS variables] features in the `renderer` methods:
+- `renderer.renderStaticStyles` will now render the `theme` as CSS variables under the `:root` pseudo class.
+- `renderer.renderStyles` will now resolve themed styles into its corresponding CSS variable.
 
 ###### `options.namespace` (`string`, optional, default: `''`)
 

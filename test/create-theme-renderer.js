@@ -174,17 +174,14 @@ test('createThemeRenderer', async (t) => {
     );
 
     await t.test(
-      'should merge css variables under :root with other static styles',
+      'should evaluate static styles as css variables if enabled',
       () => {
         assert.deepEqual(
           resolveRenderStaticStyles(
             {
-              ':root': {
-                '--custom-css-var': '8px',
-                '--uinix_colors-brand-primary': 'should be overwritten',
-              },
               a: {
                 color: 'brand.primary',
+                padding: 'm',
               },
             },
             {
@@ -208,7 +205,56 @@ test('createThemeRenderer', async (t) => {
           ),
           [
             {
-              css: '--custom-css-var:8px;--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              css: '--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              selector: ':root',
+              type: 'STATIC',
+            },
+            {
+              css: 'color:var(--uinix_colors-brand-primary);padding:var(--uinix_spacings-m)',
+              selector: 'a',
+              type: 'STATIC',
+            },
+          ],
+        );
+      },
+    );
+
+    await t.test(
+      'should merge css variables under :root with other static styles',
+      () => {
+        assert.deepEqual(
+          resolveRenderStaticStyles(
+            {
+              ':root': {
+                '--custom-css-var': '8px',
+                '--uinix_colors-brand-primary': 'should-be-overwritten',
+              },
+              a: {
+                color: 'red',
+              },
+            },
+            {
+              enableCssVariables: true,
+              namespace: 'uinix_',
+              theme: {
+                colors: {
+                  brand: {
+                    primary: 'red',
+                  },
+                },
+                spacings: {
+                  m: 8,
+                },
+              },
+              themeSpec: {
+                colors: ['color'],
+                spacings: ['padding'],
+              },
+            },
+          ),
+          [
+            {
+              css: '--uinix_colors-brand-primary:should-be-overwritten;--uinix_spacings-m:8px;--custom-css-var:8px',
               selector: ':root',
               type: 'STATIC',
             },
@@ -1149,6 +1195,185 @@ test('createThemeRenderer', async (t) => {
             .split(' ')
             .map((x) => namespace + x)
             .join(' '),
+        );
+      },
+    );
+
+    await t.test('should resolve style to css variables if enabled', () => {
+      assert.deepEqual(
+        resolveRenderStyle(
+          {
+            color: 'brand.primary',
+            background: 'blue',
+            margin: '16px',
+            padding: 'm',
+          },
+          {},
+          {
+            enableCssVariables: true,
+            theme: {
+              colors: {
+                brand: {
+                  primary: 'red',
+                },
+              },
+              spacings: {
+                m: '8px',
+              },
+            },
+            themeSpec: {
+              colors: ['color'],
+              spacings: ['padding'],
+            },
+          },
+        ),
+        [
+          {
+            declaration:
+              'color:var(--colors-brand-primary);background:blue;margin:16px;padding:var(--spacings-m)',
+            type: 'RULE',
+          },
+        ],
+      );
+    });
+
+    await t.test(
+      'should resolve style to css variables prefixed with namespace if enabled',
+      () => {
+        assert.deepEqual(
+          resolveRenderStyle(
+            {
+              color: 'brand.primary',
+              background: 'blue',
+              margin: '16px',
+              padding: 'm',
+            },
+            {},
+            {
+              enableCssVariables: true,
+              namespace: 'uinix_',
+              theme: {
+                colors: {
+                  brand: {
+                    primary: 'red',
+                  },
+                },
+                spacings: {
+                  m: '8px',
+                },
+              },
+              themeSpec: {
+                colors: ['color'],
+                spacings: ['padding'],
+              },
+            },
+          ),
+          [
+            {
+              declaration:
+                'color:var(--uinix_colors-brand-primary);background:blue;margin:16px;padding:var(--uinix_spacings-m)',
+              type: 'RULE',
+            },
+          ],
+        );
+      },
+    );
+
+    await t.test('should resolve atomic styles to css variables', () => {
+      assert.deepEqual(
+        resolveRenderStyle(
+          {
+            color: 'brand.primary',
+            background: 'blue',
+            margin: '16px',
+            padding: 'm',
+          },
+          {},
+          {
+            enableAtomicCss: true,
+            enableCssVariables: true,
+            namespace: 'uinix_',
+            theme: {
+              colors: {
+                brand: {
+                  primary: 'red',
+                },
+              },
+              spacings: {
+                m: '8px',
+              },
+            },
+            themeSpec: {
+              colors: ['color'],
+              spacings: ['padding'],
+            },
+          },
+        ),
+        [
+          {
+            declaration: 'color:var(--uinix_colors-brand-primary)',
+            type: 'RULE',
+          },
+          {
+            declaration: 'background:blue',
+            type: 'RULE',
+          },
+          {
+            declaration: 'margin:16px',
+            type: 'RULE',
+          },
+          {
+            declaration: 'padding:var(--uinix_spacings-m)',
+            type: 'RULE',
+          },
+        ],
+      );
+    });
+
+    await t.test(
+      'should render responsive theme values to css variables',
+      () => {
+        assert.deepEqual(
+          resolveRenderStyle(
+            {
+              color: ['brand.primary', 'brand.secondary', 'brand.tertiary'],
+            },
+            {},
+            {
+              enableCssVariables: true,
+              namespace: 'uinix_',
+              responsiveCssProperties: ['color'],
+              responsiveBreakpoints: ['100px', '800px'],
+              theme: {
+                colors: {
+                  brand: {
+                    primary: 'red',
+                    secondary: 'green',
+                    tertiary: 'blue',
+                  },
+                },
+              },
+              themeSpec: {
+                colors: ['color'],
+              },
+            },
+          ),
+          [
+            {
+              declaration: 'color:var(--uinix_colors-brand-secondary)',
+              media: 'screen and (min-width: 100px)',
+              type: 'RULE',
+            },
+            {
+              declaration: 'color:var(--uinix_colors-brand-tertiary)',
+              media: 'screen and (min-width: 800px)',
+              type: 'RULE',
+            },
+            {
+              declaration: 'color:var(--uinix_colors-brand-primary)',
+              type: 'RULE',
+            },
+          ],
         );
       },
     );
