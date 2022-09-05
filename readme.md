@@ -5,22 +5,24 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][bundle-size-badge]][bundle-size]
 
-Fully configurable framework-agnostic theme system (theme spec, theme, theme renderer, themed styles/keyframes/CSS-variables) for building UIs.
+Fully configurable framework-agnostic theme system (spec, theme, renderer, themed styles/keyframes/CSS variables) for building UIs.
 
 Your theme your rules 🤘.
 
-Visit the [Theme Playground] for interactive demos or read the [guides] at the official documentation website.
+## Intro
 
-## Features
+uinix-theme provides a small set of APIs to build and maintain theme systems.  Key feature highlights:
+- Framework-agnostic (works with any view library)
+- Build-free (works directly in browsers)
+- Fully configurable (anything is themable based on your spec)
+- Themed styles (all CSS properties including `filters`, `animations`)
+- Themed CSS keyframes
+- Themed CSS variables
+- Modern CSS-in-JS features
+- Responsive styles
+- Atomic CSS
 
-- Fully configurable theme system and spec.
-- Framework-agnostic.
-- Modern CSS-in-JS features.
-- Responsive styles.
-- [Atomic CSS] supported.
-- Themable [CSS variables].
-- Themable [CSS keyframes].
-- Themable styles (any CSS property!).
+To further explore uinix-theme, visit the [Theme Playground] for interactive demos, or read the [guides] at the official documentation website.
 
 ## Contents
 
@@ -29,20 +31,21 @@ Visit the [Theme Playground] for interactive demos or read the [guides] at the o
   - [Create a theme spec](#create-a-theme-spec)
   - [Create a theme](#create-a-theme)
   - [Create a theme renderer](#create-a-theme-renderer)
-  - [Render style objects](#render-style-objects)
-  - [Render style rules](#render-style-rules)
-  - [Render responsive styles](#render-responsive-styles)
-  - [Render atomic styles](#render-atomic-styles)
-  - [Render static styles](#render-static-styles)
+  - [Render themed styles](#render-themed-styles)
+  - [Render themed static styles](#render-themed-static-styles)
+  - [Render themed CSS keyframes](#render-themed-css-keyframes)
+  - [Configure and render themed atomic CSS](#configure-and-render-themed-atomic-css)
+  - [Configure and render themed CSS variables](#configure-and-render-themed-css-variables)
+  - [Configure and render themed responsive styles](#configure-and-render-themed-responsive-styles)
 - [API](#api)
-  - [`combineStyles(styles) => style`](#combinestylesstyles--style)
-  - [`createCssVariables(theme?, options?) => object`](#createcssvariablestheme-options--object)
+  - [`combineStyles(styles) => styleRule`](#combinestylesstyles--stylerule)
+  - [`createCssVariables(theme?, options?) => cssVariables`](#createcssvariablestheme-options--cssvariables)
   - [`createTheme(theme?, themeSpec?) => theme`](#createthemetheme-themespec--theme)
   - [`createThemeRenderer(options?) => renderer`](#createthemerendereroptions--renderer)
 - [Theme specs](#theme-specs)
+- [Glossary](#glossary)
 - [Project](#project)
-  - [Origins](#origins)
-  - [Goals](#goals)
+  - [Origin](#origin)
   - [Version](#version)
   - [Contribute](#contribute)
   - [Related](#related)
@@ -50,7 +53,9 @@ Visit the [Theme Playground] for interactive demos or read the [guides] at the o
 
 ## Install
 
-This package is [ESM-only] and requires Node 12+.  Install in Node with [npm]:
+This package is [ESM-only].
+
+Install in Node 12+ with [npm]:
 
 ```sh
 npm install uinix-theme
@@ -58,27 +63,27 @@ npm install uinix-theme
 
 Install in [Deno] with [esm.sh]:
 ```js
-import {...} from 'https://esm.sh/uinix-theme'
+import {...} from 'https://esm.sh/uinix-theme';
 ```
 
 Install in browsers with [esm.sh]:
 ```html
 <script type="module">
-  import {...} from 'https://esm.sh/uinix-theme'
+  import {...} from 'https://esm.sh/uinix-theme';
 </script>
 ```
 
 ## Use
 
-This section provides basic examples on using `uinix-theme`.  Please refer to the [§ API](#api) section for comprehensive documentation.
+For a concise and interactive exploration of uinix-theme, please visit the [Theme Playground] or read the [guides] at the official documentation website.
 
-You may visit the [Theme Playground] if you prefer an interactive exploration or learn more from reading the [guides] on the official documentation website.
+The following sections provide a comprehensive overview of using uinix-theme.  Please refer to the [§ Glossary](#glossary) of terms (*italicized* throughout this document).
 
 ### Create a theme spec
 
-A theme spec is an object relating theme properties (keys) and CSS properties (values).
+A *theme spec* is an object relating *theme properties* (keys) and *CSS properties* (values).  It is used as a specification in together with a *theme* to inform how *themed styles* should be resolved to CSS.
 
-You can import supported [theme specs](#theme-specs).
+Import supported theme specs in the uinix ecosystem with:
 
 ```js
 import themeSpec from 'uinix-theme-spec';
@@ -94,18 +99,22 @@ const themeSpec = {
   'backgrounds': ['background'],
   ...
   'spacings': [
-    ...
     'margin',
     'marginBlock',
     'marginBlockEnd',
     'marginBottom',
+    'padding',
+    'paddingBottom',
+    'paddingLeft',
+    'paddingRight',
+    'paddingTop',
     ...
   ],
   ...
 }
 ```
 
-Or, you can create your own theme spec by specifying the relationships of theme properties and CSS properties.
+You can create your own theme spec by specifying the relationships of theme properties and CSS properties.  This allows you to fully configure and manage your theme spec for your theme system.
 
 ```js
 const themeSpec = {
@@ -114,7 +123,15 @@ const themeSpec = {
     'borderColor',
     'color',
   ],
-  space: [
+  // for example, you may want to split "spacings" into two explicit groups instead
+  margins: [
+    'margin',
+    'marginBottom',
+    'marginLeft',
+    'marginRight',
+    'marginTop',
+  ],
+  paddings: [
     'padding',
     'paddingBottom',
     'paddingLeft',
@@ -122,35 +139,18 @@ const themeSpec = {
     'paddingTop',
   ],
   ...
-}
+};
 ```
 
 ### Create a theme
 
-A theme is an object relating theme properties (defined in a theme spec) to theme property definitions.  Theme property definitions can be arbitrarily nested to organize theme values.
+A *theme* is an object relating *theme properties* with *CSS values* (can be arbitrarily nested). It provides a way to define and reference CSS values via *theme property paths*.
 
-Create a theme using a theme spec with:
+Create a theme using a *theme spec* with `createTheme`:
 
 ```js
 import {createTheme} from 'uinix-theme';
 
-const theme = createTheme({}, themeSpec);
-
-console.log(theme);
-```
-
-Yields an empty theme using the custom theme spec we created earlier.
-
-```js
-const theme = {
-  colors: {},
-  space: {},
-}
-```
-
-Or provide an initial theme to `createTheme` to create a compliant theme based on the provided theme spec:
-
-```js
 const theme = createTheme({
   colors: {
     brand: { // can be arbitrarily nested for organization.
@@ -158,7 +158,7 @@ const theme = createTheme({
       link: 'blue',
     },
   },
-  spaces: {
+  paddings: {
     s: 4,
     m: 8,
     l: 16,
@@ -169,7 +169,7 @@ const theme = createTheme({
 console.log(theme);
 ```
 
-Yields:
+Yields a compliant theme based on the provided theme spec:
 
 ```js
 const theme = {
@@ -179,7 +179,8 @@ const theme = {
       link: 'blue',
     },
   },
-  space: {
+  margins: {}, // every theme property in the theme spec is materialized if not specified.
+  paddings: {
     s: 4,
     m: 8,
     l: 16,
@@ -190,9 +191,9 @@ const theme = {
 
 ### Create a theme renderer
 
-A theme renderer provides ways to resolve themed styles based on the provided theme and theme spec, and render the resolved styles to the DOM.
+A *theme renderer* provides ways to resolve *themed styles* based on the provided *theme* and *theme spec*, and renders the resolved CSS to the DOM.
 
-Create and configure a theme renderer based on the provided theme and theme spec:
+Create and configure a theme renderer based on the provided theme and theme spec with `createThemeRenderer`:
 
 ```js
 import {createThemeRenderer} from 'uinix-theme';
@@ -203,35 +204,38 @@ const renderer = createThemeRenderer({
 });
 ```
 
-Initialize the theme renderer in a single entry point in your code.
+Initialize the theme renderer in a single entry point in your code to render CSS to the DOM.
 
 ```js
 renderer.render();
 ```
 
-### Render style objects
+### Render themed styles
 
-Render a themed style object with:
+Render a *themed style* object with `renderer.renderStyle`:
 
 ```js
-// supports modern CSS-in-JS features (e.g. PostCSS selectors)
 const style = {
-  color: 'brand.primary',
+  color: 'brand.primary', // theme property path informs that the value is theme-driven
+  fill: 'rgba(0, 0, 0, 0.5)', // CSS values are valid
   padding: 'm',
-  ':hover > a': {
-    color: 'brand.link',
-    padding: 's',
+  ':hover': {
+    '> a': {
+      color: 'brand.link',
+      padding: 's',
+    }
   },
 };
 
 renderer.renderStyle(style);
 ```
 
-Yields the following rendered CSS
+Yields the following rendered CSS:
 
 ```css
 .x {
   color: red;
+  fill: rgba(0, 0, 0, 0.5);
   padding: 8px;
 }
 .x:hover > a {
@@ -240,11 +244,7 @@ Yields the following rendered CSS
 }
 ```
 
-> **Note**: Themed styles are resolved by checking the theme values (e.g. `brand.primary`) against its assigned CSS properties (e.g. `color`).  The resolved style value is looked up in the provided `theme` (e.g. via `theme.colors`) and confirmed that the CSS property (e.g. `color`) is registered in the provided `themeSpec`.
-
-### Render style rules
-
-Render a themed style rule (function) with:
+To express styles as a simple function of state and props, simply pass a *style rule* to `renderer.renderStyle`:
 
 ```js
 const styleRule = (props) => ({
@@ -252,10 +252,13 @@ const styleRule = (props) => ({
   padding: 'm',
 });
 
-renderer.renderStyle(styleRule, {isPrimary: true});
+renderer.renderStyle(
+  styleRule,
+  {isPrimary: true}, // props for the provided style rule
+);
 ```
 
-Yields the following rendered CSS
+Yields the following rendered CSS:
 
 ```css
 .x {
@@ -264,17 +267,215 @@ Yields the following rendered CSS
 }
 ```
 
-> **Note:** This allows us to express styles as a simple functions of state, providing strategies for composition and testing.
+> **Note:** Please refer to the examples of *style* and *themed style* in the [§ Glossary](#glossary) for details on authoring CSS-in-JS styles and how the themed styles are resolved by the *theme renderer* using the provided *theme* and *theme spec*.
 
-### Render responsive styles
+### Render themed static styles
 
-Responsive styles are easily supported by configuring the theme renderer appropriately.
+You can render themed *static styles* to the global CSS styles with `renderer.renderStaticStyles`:
+
+```js
+const style = {
+  body: {
+    color: 'brand.primary',
+    padding: 'm',
+  },
+  '*': {
+    boxSizing: 'border-box',
+  },
+  'a:hover': {
+    color: 'brand.link',
+    padding: 's',
+  },
+};
+
+renderer.renderStaticStyles(style);
+```
+
+Yields the following global CSS styles:
+
+```css
+body {
+  color: red;
+  padding: 8px;
+}
+* {
+  box-sizing: border-box;
+}
+a:hover {
+  color: blue;
+  padding: 4px;
+}
+```
+
+### Render themed CSS keyframes
+
+To render themed *CSS keyframes*, first ensure that the `themeSpec` is configured to register the `animationName` *CSS property* (we recommend using `keyframes` as the canonical theme property).
+
+```js
+const themeSpec = {
+  ... // same keys/values in earlier examples.
+  keyframes: ['animationName'],
+};
+```
+
+Attach the *CSS keyframes* in JS object notation under the registered *theme property* (`keyframes`):
+
+```js
+const theme = {
+  keyframes: {
+    flicker: {
+      '0%': {opacity: '0'},
+      '50%': {opacity: '1'},
+      '100%': {opacity: '0'},
+    },
+    spin: {
+      circle: { // can be arbitrarily nested
+        from: {
+          transform: 'rotate(0deg)',
+        },
+        to: {
+          transform: 'rotate(360deg)',
+        },
+      },
+    },
+  },
+};
+```
+
+We can now render and resolve themed CSS keyframes using appropriate CSS `animation` short-hand techniques:
+
+```js
+const style = {
+  animation: '1s linear infinite', // CSS animation shorthand
+  animationName: 'spin.circle', // recall that "animationName" is registered to the "keyframes" theme property
+};
+
+renderer.renderStyle(style);
+```
+
+Yields the following CSS:
+
+```css
+.x {
+  animation: 1s linear infinite;
+  animation-name: k1; /* generated CSS keyframe */
+}
+```
+
+### Configure and render themed atomic CSS
+
+If you would like the renderer to render themed styles as *atomic CSS*, configure this in `createThemeRenderer`:
 
 ```js
 import {createThemeRenderer} from 'uinix-theme';
 
 const renderer = createThemeRenderer({
-  responsiveBreakpoints: ['400px', '800px'],
+  enableAtomicCss: true,
+  theme,
+  themeSpec,
+});
+
+renderer.render();
+
+const style1 = {
+  color: 'brand.primary';
+  padding: 'm',
+};
+
+const style2 = {
+  color: 'brand.primary';
+  padding: 'l',
+};
+
+renderer.renderStyle(style1);
+renderer.renderStyle(style2);
+```
+
+Yields the following rendered atomic CSS classes:
+
+```css
+/* Every CSS property/value pair is generated as a unique CSS class. */
+.x {
+  color: red;
+}
+
+.y {
+  padding: 8px;
+}
+
+.z {
+  padding: 16px;
+}
+```
+
+> **Note**: We recommend enabling atomic CSS in production as a scalable solution to share and reuse CSS class definitions across HTML elements. Disabling atomic styles in development is recommended to improve debugging experience.
+
+### Configure and render themed CSS variables
+
+If you prefer to work with *CSS variables* and would like to integrate CSS workstreams with uinix-theme, you can configure rendering the entire *theme* as CSS variables in the global style sheet.
+
+```js
+import {createThemeRenderer} from 'uinix-theme';
+
+const renderer = createThemeRenderer({
+  enableCssVariables: true,
+  theme,
+  themeSpec,
+});
+
+renderer.render();
+
+const staticStyles = {...}; // your other global styles
+
+renderer.renderStaticStyles(staticStyles);
+```
+
+Yields the following rendered global CSS:
+
+```css
+:root {
+  --colors-brand-primary: red;
+  --colors-brand-link: blue;
+  --paddings-s: 4px;
+  --paddings-m: 8px;
+  --paddings-l: 16px;
+};
+/* your other global styles */
+```
+
+In addition, this feature also attempts to resolve *themed styles* to use CSS variables whenever possible.
+
+```js
+const style = {
+  backgroundColor: 'purple',
+  color: 'brand.primary',
+  margin: 'not.a.valid.theme.value',
+  padding: 'm',
+}
+
+renderer.renderStyle(style);
+```
+
+Yields the following CSS:
+
+```css
+.x {
+  background-color: purple; /* just a CSS value */
+  color: var(--colors-brand-primary); /** resolves to a themed CSS variable */
+  padding: var(--paddings-m); /** resolves to a themed CSS variable *./
+  /* margin is not rendered as it cannot be resolved */
+}
+```
+
+### Configure and render themed responsive styles
+
+*Responsive styles* are easily supported by configuring the theme renderer appropriately to specify responsive breakpoints and whitelist CSS properties to be responsive-aware:
+
+```js
+import {createThemeRenderer} from 'uinix-theme';
+
+const renderer = createThemeRenderer({
+  responsiveBreakpoints: ['400px', '800px'], // min-width-based
   responsiveCssProperties: ['padding', 'margin'],
   theme,
   themeSpec,
@@ -286,7 +487,7 @@ Specify responsive styles for the provided breakpoints:
 ```js
 const responsiveStyle = {
   color: ['black', 'brand.primary', 'brand.link'],
-  margin: ['s', 'm', 'l'],
+  padding: ['s', 'm', 'l'],
 };
 ```
 
@@ -311,79 +512,23 @@ Yields the following rendered CSS
 }
 ```
 
-> **Note:** While `color` was specified in `responsiveStyle`, it is not resolved because it was not explicitly whitelisted in `options.responsiveCssProperties`.
-
-### Render atomic styles
-
-If you would like the renderer to render styles as [atomic CSS], configure this appropriately with:
-
-```js
-import {createThemeRenderer} from 'uinix-theme';
-
-const renderer = createThemeRenderer({
-  enableAtomicCss: true,
-  theme,
-  themeSpec,
-});
-
-const style = {
-  color: 'brand.primary';
-  padding: 'm',
-};
-```
-
-Yields the following rendered atomic CSS classes
-
-```css
-.x {
-  color: red;
-}
-
-.y {
-  padding: 8px;
-}
-```
-
-> **Note:** We recommend enabling atomic styles in production apps as a scalable solution to share CSS.  Disabling atomic styles in development is recommended to improve debugging experience.
-
-### Render static styles
-
-You can render static styles to the as global CSS styles with:
-
-```js
-const style = {
-  body: {
-    color: 'brand.primary',
-    padding: 'm',
-  },
-  '*': {
-    boxSizing: 'border-box',
-  },
-  'a:hover': {
-    color: 'brand.link',
-    padding: 's',
-  },
-};
-
-renderer.renderStaticStyles(style);
-```
-
-> **Note:** `renderer.renderStaticStyles` currently does not support nested PostCSS selectors and this will be supported in the near future.  It still supports themed styles.
+> **Note**: While `color` was specified in `responsiveStyle`, it is not resolved because it was not explicitly whitelisted in `options.responsiveCssProperties`.
 
 ## API
 
-`uinix-theme` has no default export, and exports the following identifiers:
-
+`uinix-theme` exports the following identifiers:
 - `combineStyles`
 - `createCssVariables`
 - `createTheme`
 - `createThemeRenderer`
 
-APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the source code.
+There are no default exports.
 
-### `combineStyles(styles) => style`
+Please refer to the [§ Glossary](#glossary) of terms (*italicized* throughout this document).
 
-Combines an array of style objects or rules and returns a single composed style rule.
+### `combineStyles(styles) => styleRule`
+
+Combines an array of *style objects* or *style rules* and returns a single composed *style rule*.
 
 ##### Parameters
 
@@ -393,51 +538,55 @@ An array of `StyleObject` or `StyleRule`.
 
 ##### Returns
 
-###### `style` (`StyleRule`)
-A single composed style rule.
+###### `styleRule` (`StyleRule`)
+A single composed *style rule*.
 
 <details>
 <summary>Example</summary>
 
 ```js
-const rule1 = props => ({
+import {combineRules} from 'uinix-theme';
+
+const styleRule1 = props => ({
   fontSize: props.fontSize,
   color: 'red',
 });
 
-const rule2 = props => ({
+const styleRule2 = props => ({
   color: 'blue',
 });
 
-const combinedRule = combineRules([rule1, rule2]);
+const combinedRule = combineRules([styleRule1, styleRule2]);
 ```
 
 Effectively behaves as
 
 ```js
-const combinedRule = props => ({
+const combinedStyleRule = props => ({
   fontSize: props.fontSize,
   color: 'blue',
 });
 ```
 </details>
 
-### `createCssVariables(theme?, options?) => object`
+### `createCssVariables(theme?, options?) => cssVariables`
 
-Creates an object of [CSS variables] from the provided theme.  CSS variables are validly named based on the flattened property path of the potentially nested theme.
+Creates an object of *CSS variables* using the provided *theme*.  CSS variables are named based on the *theme property paths* of the provided theme.
 
 ##### Parameters
 
 ###### `theme` (`Theme`, optional, default: `{}`)
 
-An object relating theme properties (keys) and theme property definitions (values).
+See *theme* defined in [§ Glossary](#glossary).
 
 ###### `options.namespace` (`string`, optional, default: `''`)
 
+Prepends a namespace prefix to every rendered CSS variable. Namespaces can only consist of `a-zA-Z0-9-_` and must begin with `a-zA-Z_`.
+
 ##### Returns
 
-###### `object` (`Object`)
-An object containing resolved [CSS variables].
+###### `cssVariables` (`Object`)
+An object containing resolved *CSS variables*.
 
 <details>
 <summary>Example</summary>
@@ -460,10 +609,10 @@ const theme = {
   },
 };
 
-const cssVariables = createCssVariables(theme, {namespace: 'uinix-'});
+const cssVariables = createCssVariables(theme, {namespace: 'uinix'});
 ```
 
-Yields the following object of CSS variables.
+Yields the following CSS variables.
 
 ```js
 const cssVariables = {
@@ -478,74 +627,201 @@ const cssVariables = {
 
 ### `createTheme(theme?, themeSpec?) => theme`
 
-Creates a validated theme object based on the provided theme and theme spec.  Theme properties not specified on the theme spec are considered invalid and are not included in the returned theme.
+Creates a validated theme object based on the provided *theme* and *theme spec*.  *Theme properties* not specified on the theme spec are considered invalid and are not included in the returned object.
 
 ##### Parameters
 
 ###### `theme` (`Theme`, optional, default: `{}`)
 
-An object relating theme properties (keys) and theme property definitions (values).
+See *theme* defined in [§ Glossary](#glossary).
 
 ###### `themeSpec` (`ThemeSpec`, optional, default: `{}`)
 
-An object relating theme properties (keys) and CSS properties (values).
+See *theme spec* defined in [§ Glossary](#glossary).
 
 ##### Returns
 
 ###### `theme` (`Theme`)
 A validated theme object based on the provided theme spec.
 
+<details>
+<summary>Example</summary>
+
+```js
+import {createTheme} from 'uinix-theme';
+
+const themeSpec = {
+  colors: [
+    'backgroundColor',
+    'color'
+  ],
+  fontFamilies: ['fontFamily'],
+  fontSizes: ['fontSize'],
+  spacings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+}
+
+const theme = createTheme({
+  colors: {
+    brand: {
+      primary: 'red',
+      link: 'blue',
+    },
+  },
+  paddings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+  unsupportedThemeProperty: {}
+}, themeSpec);
+
+console.log(theme);
+```
+
+Yields the following validated theme:
+
+```js
+const theme = {
+  colors: {
+    brand: {
+      primary: 'red',
+      link: 'blue',
+    },
+  },
+  fontFamilies: {}, // materialized from themeSpec
+  fontSizes: {}, // materialized from themeSpec
+  spacings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+  // unsupported theme properties are dropped
+}
+```
+</details>
+
 ### `createThemeRenderer(options?) => renderer`
 
-Creates a theme renderer to resolve themed styles based on the provided theme and theme spec, and render the resolved styles to the DOM.
+Creates a theme renderer to resolve *themed styles* based on the provided *theme* and *theme spec*, and render the resolved styles to the DOM.
 
 ##### Parameters
 ###### `options.enableAtomicCss` (`boolean`, optional, default: `false`)
 
-Enables rendering styles as [atomic CSS].
+Enables rendering styles as *atomic CSS*.
 
 ###### `options.enableCssVariables` (`boolean`, optional, default: `false`)
 
-When enabled, will support [CSS variables] features in the `renderer` methods:
-- `renderer.renderStaticStyles` will now render the `theme` as CSS variables under the `:root` pseudo class.
-- `renderer.renderStyles` will now resolve themed styles into its corresponding CSS variable.
+When enabled, will support *CSS variables* features in the `renderer` methods:
+- `renderer.renderStaticStyles` will now render the `theme` as *CSS variables* under the `:root` pseudo class.
+- `renderer.renderStyle` will now resolve *themed styles* into its corresponding *CSS variables*.
 
 ###### `options.namespace` (`string`, optional, default: `''`)
 
-Prepends a namespace prefix to every rendered CSS classname and keyframe. Namespaces can only consist of `a-zA-Z0-9-_` and start with `a-zA-Z_`.
+Prepends a namespace prefix to every rendered CSS classname and keyframe. Namespaces can only consist of `a-zA-Z0-9-_` and must begin with `a-zA-Z_`.
 
 ###### `options.responsiveBreakpoints` (`Array<string>`, optional, default: `[]`)
 
-Configure this to support responsive styling based on the provided breakpoints.  Breakpoints are `min-width`-based media queries.
+Configure this to support *responsive styles* based on the provided breakpoints.  Breakpoints are `min-width`-based media queries.
 
 ###### `options.responsiveCssProperties` (`Array<string>`, optional, default: `[]`)
 
-Responsive styling requires explicitly whitelisting the corresponding responsive CSS properties.
+Whitelist the corresponding responsive *CSS properties* to be responsive-aware.
 
 ###### `options.themeSpec` (`ThemeSpec`, optional, default: `{}`)
 
-Provide a custom theme spec.
+See *theme* defined in [§ Glossary](#glossary).
 
 ###### `options.theme` (`Theme`, optional, default: `createTheme()`)
 
-Provide a custom theme.
+See *theme spec* defined in [§ Glossary](#glossary).
 
 ##### Returns
 
 ###### `renderer` (`ThemeRenderer`)
 
-Returns a theme renderer with methods to resolve and render themed/responsive styles to the DOM.
+Returns a *theme renderer* with methods to resolve and render *themed styles* to the DOM.
 
 - `renderer.clear()`: Clears and removes all rendered CSS.
 - `renderer.render()`: Initializes the renderer.
-- `renderer.renderStyles(style, props?)`: Resolves and renders the provided style (object or rule).  Accepts optional props.
-- `renderer.renderStaticStyles(style)`: Resolves and renders the provided static style object.
+- `renderer.renderStyle(style, props?)`: Resolves and renders the provided *style object* or *style rule*).  Accepts optional *style props*.
+- `renderer.renderStaticStyles(style)`: Resolves and renders the provided *static style* object.
+
+<details>
+<summary>Example</summary>
+
+Create and configure a theme renderer with:
+
+```js
+import {createThemeRenderer} from 'uinix-theme';
+
+const theme = {...};
+
+const themeSpec = {...};
+
+const renderer = createThemeRenderer({
+  enableAtomicCss: true,
+  enableCssVariables: true,
+  namespace: 'uinix',
+  responsiveBreakpoints: ['400px', '800px'],
+  responsiveCssProperties: ['padding', 'margin'],
+  theme,
+  themeSpec,
+});
+```
+
+Initialize the renderer in a single entry point in your code with:
+
+```js
+renderer.render();
+```
+
+Render *static styles* to the global CSS with:
+
+```js
+const staticStyles = {
+  'body': {...}
+  '*': {...},
+  '.vendor-classname': {...}
+};
+
+renderer.renderStaticStyles(staticStyles);
+```
+
+Render either *style objects* or *style rules* with:
+
+```js
+const styleObject = {
+  color: 'brand.primary',
+  ':hover': {
+    color: 'brand.link',
+  },
+};
+
+const styleRule = (props) => ({
+  color: 'brand.primary',
+  padding: props.isPadded ? 'm' : 0,
+});
+
+renderer.renderStyle(styleObject);
+renderer.renderStyle(styleRule, {isPadded: true});
+```
+
+Clear all rendered styles with:
+
+```js
+renderer.clear();
+```
+</details>
 
 ## Theme Specs
 
-The following are theme-specs usable by `uinix-theme`.
-- [`uinix-theme-spec`][uinix-theme-spec]: the default `uinix-theme` spec.
-- [`uinix-theme-spec-theme-ui`][uinix-theme-spec-theme-ui]: the [`theme-ui`][theme-ui] spec usable in `uinix-theme`.
+The following are theme-specs usable by uinix-theme.
+- [`uinix-theme-spec`][uinix-theme-spec] — the default uinix-theme spec.
+- [`uinix-theme-spec-theme-ui`][uinix-theme-spec-theme-ui] — the [theme-ui] spec usable by uinix-theme.
 
 <details>
 <summary>Example</summary>
@@ -573,21 +849,300 @@ console.log(theme);
 
 </details>
 
+## Glossary
+
+The following terms are used throughout this documentation and are defined below.  We will reference the following objects throughout this section.
+
+```js
+const theme = {
+  colors: {
+    brand: {
+      primary: 'blue',
+      secondary: 'yellow',
+    },
+  },
+  spacings: {
+    s: 4,
+    m: 8,
+    l: 16,
+  },
+};
+
+const themeSpec = {
+  colors: [
+    'backgroundColor',
+    'color',
+  ],
+  spacings: [
+    'margin',
+    'marginBottom',
+    'marginLeft',
+    'marginRight',
+    'marginTop',
+  ],
+};
+```
+
+### Theme
+
+- ***Theme***: An object (e.g. `theme`) relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme property paths*.
+- ***Theme property***: The keys of a *theme* that relates to their corresponding *CSS property* as defined in the *theme spec*.
+  <details>
+  <summary>Example</summary>
+
+  The `colors` and `spacings` are theme properties based on `theme`.
+  </details>
+- ***Theme property path***: [JSONPath]-like syntax to refer to *CSS values* in a *theme*.
+  <details>
+  <summary>Example</summary>
+
+  The `colors.brand.primary` and `spacings.m` would refer to the CSS values `'blue'` and `8` respectively based on `theme`.
+  </details>
+- ***Theme spec***: An object relating *theme properties* with *CSS properties*.  It is used as a specification together with a *theme* to inform how *themed styles* should be resolved to CSS.
+  <details>
+    <summary>Example</summary>
+
+    Referring to the `theme` and `themeSpec` above, we note that
+    - the `colors` *theme property* relates to the `backgroundColor`, `color` *CSS properties*.
+    - the `spacings` *theme property* relates to the `margin`, `marginBottom`, `marginLeft`, `marginRight`, `marginTop` *CSS properties*.
+  </details>
+- ***Themed style***: A *style* that is specified with *theme property paths* as values (instead of *CSS values*).  A themed style is only meaningful in relation to a *theme* and *theme spec*, as the following example demonstrates.
+  <details>
+    <summary>Example</summary>
+
+    Given the following themed style,
+
+    ```js
+    const themedStyle = {
+      color: 'brand.primary',
+      margin: 'm',
+      fill: 'red',
+      top: 64,
+      backgroundColor: 'not.a.valid.theme.path',
+      padding: 'm',
+    };
+    ```
+
+    It will resolve to the following CSS based on the `theme` and `themeSpec`.
+
+    ```css
+    .x {
+      color: blue;
+      fill: red;
+      margin: 8px;
+      top: 64,
+    }
+    ```
+
+    - `color` is resolved to the *CSS value* `'blue'` by checking that the `color` *CSS property* is registered in `themeSpec` (under the `colors` *theme property*) and that the `'brand.primary'` *theme property path* is resolvable under `theme.colors`.
+    - `margin` is resolved to the *CSS value* `'8px'` by checking that the `margin` *CSS property* is registered in `themeSpec` (under the `spacings` *theme property*) and that the `'m'` *theme property path* is resolvable under `theme.spacings`.
+    - `fill` and `top` simply use their specified *CSS values* as fallback values since they cannot be resolved based on the `theme` and `themeSpec`.
+    - `backgroundColor` is unresolved because while it is a *CSS property* registered in `themeSpec`, the `'not.a.valid.path'` *theme property path* is not resolvable under `theme.colors`.
+    - `padding` is unresolved because it is not a *CSS property* registered in `themeSpec` despite having a valid *theme property path*.
+
+  </details>
+- ***Theme renderer***: A program that resolves *themed styles* based on the provided *theme* and *theme spec*, and renders the CSS to DOM.
+- ***Theme system***: A system of programs that support specifying the *theme spec*, creating and validating the relating *theme*, resolving and rendering *themed styles* to CSS.
+
+### Styles
+
+- ***Style***: A declaration to style HTML elements via CSS.  Authored in JS as *style objects* or *style rules*.
+The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide an example to highlight notable syntax and features.
+  <details>
+  <summary>Example</summary>
+
+  ```js
+  const style = {
+    color: 'red',
+    fontSize: 14, // CSS properties are camel-cased, and may accept unitless values
+    ':hover': { // CSS pseudo class
+      color: 'yellow',
+      ':active': { // can be further nested (equivalent to ':hover:active')
+        color: 'blue',
+      },
+    },
+    '::before': { // CSS pseudo element
+      content: '" "', // nested quotes to set string content
+    },
+    '[checked="true"]': { // CSS attribute selector
+      color: 'yellow',
+      '[target]': { // can be further nested (equivalent to '[checked="true"][target]')
+        color: 'blue',
+      },
+    },
+    '> .some-class': { // CSS child selector
+      color: 'yellow',
+      '> #some-id': { // can be further nested (equivalent to '> .some-class > #some-id')
+        color: 'blue',
+      },
+    },
+    '& .some-class': { // CSS "self" selector
+      color: 'yellow',
+      ':hover': { // can be further nested (equivalent to '& .some-class:hover')
+        color: 'blue',
+      },
+    },
+  };
+  ```
+  </details>
+
+- ***Style object***: A *style* represented as a JS object.
+  <details>
+    <summary>Example</summary>
+
+    ```js
+    const style = {
+      color: 'red',
+      padding: 8,
+      ':hover': {
+        color: 'yellow',
+      },
+    };
+    ```
+  </details>
+- ***Style rule***: A *style* represented as a JS function that returns a *style object*.  This is useful to represent style as a function or state.
+  <details>
+    <summary>Example</summary>
+
+    ```js
+    const rule = (props) => ({
+      color: props.isActive ? 'blue' : 'yellow',
+      padding: props.isPadded ? 8 : 0,
+    });
+
+    console.log(rule({isActive: true})); // {color: 'blue', padding: 0}
+    console.log(rule({isPadded: true})); // {color: 'yellow', padding: 8}
+    ```
+  </details>
+- ***Style props***: an object used as an argument for a *style rule*.
+- ***Static style***: refers to static *style objects* that are usually defined once and rendered to the global style sheet.
+  <details>
+    <summary>Example</summary>
+
+    ```js
+    const globalStyles = {
+      '*': {
+        boxSizing: 'border-box',
+      },
+      'body': {
+        margin: 0,
+        padding: 0,
+      },
+      'a': {
+        color: 'blue',
+      },
+      'a:hover': {
+        color: 'yellow',
+      },
+      '.vendor-classname': {...}
+    }
+    ```
+  </details>
+- ***Responsive style***: when an array of breakpoints are provided, responsive styles can be expressed in convenient array notation to render media queries.
+  <details>
+    <summary>Example</summary>
+
+    Given the following responsive breakpoints (`min-width`-based):
+
+    ```js
+    const breakpoints = ['400px', '800px'];
+    ```
+
+    And a responsive style:
+    ```js
+    const responsiveStyle = {
+      color: ['black', 'blue', 'yellow'],
+      margin: [4, 8, 16],
+    };
+    ```
+
+    Yields the following rendered CSS:
+    ```css
+    .x {
+      color: black;
+      margin: 4px;
+    }
+
+    @media (min-width: 400px) {
+      .x {
+        color: blue;
+        margin: 8px;
+      }
+    }
+
+    @media (min-width: 800px) {
+      .x {
+        color: yellow;
+        margin: 16px;
+      }
+    }
+    ```
+  </details>
+
+### CSS
+
+- ***Atomic CSS***:  Every *CSS property/value* pair is generated as a unique *CSS class*.  This allows HTML elements to reuse and share class definitions, which is a useful strategy to limit and reuse rendered CSS.
+  <details>
+  <summary>Example</summary>
+  Given the following HTML and (non-atomic) CSS,
+
+  ```html
+  <div class="x" />
+  <div class="y" />
+  ```
+
+  ```css
+  .x {
+    color: red;
+    padding: 8px;
+  }
+  .y {
+    color: red;
+    padding: 4px;
+  }
+  ```
+
+  The following HTML would be equivalent using atomic CSS.
+
+  ```html
+  <div class="a b" />
+  <div class="a c" />
+  ```
+
+  ```css
+  .a {
+    color: red;
+  }
+  .b {
+    padding: 8px;
+  }
+  .c {
+    padding: 4px;
+  }
+  ```
+  </details>
+- ***CSS class***: See [CSS (MDN)].
+- ***CSS variable***: See [CSS variable (MDN)].
+- ***CSS keyframe***: See [CSS keyframe (MDN)].
+- ***CSS property***: See [CSS property (MDN)].
+- ***CSS selector***: See [CSS selector (MDN)].
+- ***CSS value***: See [CSS value (MDN)].
+
 ## Project
 
-### Origins
+### Origin
 
-`uinix-theme` is inspired by [`theme-ui`][theme-ui], and borrows many ideas and principles from [`fela`][fela].
+uinix-theme is originally inspired by the ideas in [theme-ui], and evolves these ideas into framework-agnostic and fully configurable APIs, implemented via [fela].
 
-### Goals
-
-`uinix-theme`:
-- adheres to the [uinix philosophy].
-- aims to provide a functional, minimal, and configurable theming solution for framework-agnostic UI development.
+uinix-theme approaches theme systems with the following emphasis:
+- Fully-configurable: Allow consumers to own their own spec instead of providing an opinionated one.
+- Framework-agnostic: solve the domain problem in JS and not in specific frameworks.
+- Build-free: APIs are usable without the need for a build system (e.g. directly in browsers as plain JS).
+- Update-free: APIs are intended to be stable, imparting confidence for both maintainers and consumers of the project.
 
 ### Version
 
-`uinix-theme` adheres to [semver] starting at 1.0.0.
+uinix-theme adheres to [semver] starting at 1.0.0.
 
 ### Contribute
 
@@ -597,10 +1152,10 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 
 ### Related
 
-- [`uinix-js`][uinix-js]
-- [`uinix-ui`][uinix-ui]
-- [`fela`][fela]
-- [`theme-ui`][theme-ui]
+- [uinix-js]
+- [uinix-ui]
+- [fela]
+- [theme-ui]
 
 ### License
 
@@ -622,19 +1177,23 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [uinix-theme-spec]: https://github.com/uinix-js/uinix-theme-spec
 [uinix-theme-spec-theme-ui]: https://github.com/uinix-js/uinix-theme-spec-theme-ui
 [uinix-ui]: https://github.com/uinix-js/uinix-ui
+[guides]: https://uinix.dev/packages/uinix-theme
+[theme playground]: https://uinix.dev/demos/theme-playground
 
 <!-- defs -->
 [atomic css]: https://css-tricks.com/lets-define-exactly-atomic-css/
-[CSS keyframes]: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes
-[CSS variables]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
+[CSS (MDN)]: https://developer.mozilla.org/en-US/docs/Web/CSS
+[CSS keyframe (MDN)]: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes
+[CSS property (MDN)]: https://developer.mozilla.org/en-US/docs/Glossary/property/CSS
+[CSS selector (MDN)]: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#selectors
+[CSS value (MDN)]: https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
+[CSS variable (MDN)]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
 [deno]: https://deno.land/
 [esm.sh]: https://esm.sh/
 [ESM-only]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 [fela]: https://github.com/robinweser/fela
-[guides]: https://uinix.dev/packages/uinix-theme
+[JSONPath]: https://support.smartbear.com/alertsite/docs/monitors/api/endpoint/jsonpath.html
 [jsdoc]: https://github.com/jsdoc/jsdoc
 [npm]: https://docs.npmjs.com/cli/v8/commands/npm-install
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
-[theme playground]: https://uinix.dev/demos/theme-playground
-[typescript]: https://github.com/microsoft/TypeScript
