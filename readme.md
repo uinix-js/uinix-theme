@@ -77,11 +77,11 @@ Install in browsers with [esm.sh]:
 
 For a concise and interactive exploration of uinix-theme, please visit the [Theme Playground] or read the [guides] at the official documentation website.
 
-The following sections provide a comprehensive overview of using uinix-theme.  Please refer to the [§ Glossary](#glossary) of terms (*italicized* throughout this document).
+The following sections provide a comprehensive overview of using uinix-theme.  Please refer to the [§ Glossary](#glossary) for definitions of *italicized terms* referenced throughout this document.
 
 ### Create a theme spec
 
-A *theme spec* is an object relating *theme properties* (keys) and *CSS properties* (values).  It is used as a specification in together with a *theme* to inform how *themed styles* should be resolved to CSS.
+A *theme spec* is an object relating *theme properties* (keys) and *CSS properties* (values).  It is used as a specification together with a *theme* to inform how *themed styles* should be resolved and rendered to CSS.
 
 Import supported theme specs in the uinix ecosystem with:
 
@@ -217,7 +217,7 @@ Render a *themed style* object with `renderer.renderStyle`:
 ```js
 const style = {
   color: 'brand.primary', // theme property path informs that the value is theme-driven
-  fill: 'rgba(0, 0, 0, 0.5)', // CSS values are valid
+  fill: 'rgba(0, 0, 0, 0.5)', // CSS values are also valid
   padding: 'm',
   ':hover': {
     '> a': {
@@ -244,7 +244,7 @@ Yields the following rendered CSS:
 }
 ```
 
-To express styles as a simple function of state and props, simply pass a *style rule* to `renderer.renderStyle`:
+To express styles as a simple function of state and props, simply pass a *style rule* (function) to `renderer.renderStyle`:
 
 ```js
 const styleRule = (props) => ({
@@ -346,8 +346,8 @@ We can now render and resolve themed CSS keyframes using appropriate CSS `animat
 
 ```js
 const style = {
-  animation: '1s linear infinite', // CSS animation shorthand
-  animationName: 'spin.circle', // recall that "animationName" is registered to the "keyframes" theme property
+  animation: '1s linear infinite', // CSS "animation" shorthand
+  animationName: 'spin.circle', // overwrite the "animationName" CSS property with a theme value
 };
 
 renderer.renderStyle(style);
@@ -358,7 +358,7 @@ Yields the following CSS:
 ```css
 .x {
   animation: 1s linear infinite;
-  animation-name: k1; /* generated CSS keyframe */
+  animation-name: k1; /* generated CSS keyframe based on the what is specified in theme.keyframes */
 }
 ```
 
@@ -524,7 +524,7 @@ Yields the following rendered CSS
 
 There are no default exports.
 
-Please refer to the [§ Glossary](#glossary) of terms (*italicized* throughout this document).
+Please refer to the [§ Glossary](#glossary) for definitions of *italicized terms* referenced throughout this document.
 
 ### `combineStyles(styles) => styleRule`
 
@@ -581,7 +581,7 @@ See *theme* defined in [§ Glossary](#glossary).
 
 ###### `options.namespace` (`string`, optional, default: `''`)
 
-Prepends a namespace prefix to every rendered CSS variable. Namespaces can only consist of `a-zA-Z0-9-_` and must begin with `a-zA-Z_`.
+Prepends a namespace prefix to every rendered CSS variable. Namespaces can only consist of `a-z0-9-_` (lowercase alphanumerals) and must begin with `a-z_`.
 
 ##### Returns
 
@@ -655,14 +655,25 @@ const themeSpec = {
     'backgroundColor',
     'color'
   ],
-  fontFamilies: ['fontFamily'],
-  fontSizes: ['fontSize'],
-  spacings: {
-    s: 4,
-    m: 8,
-    l: 16,
-  },
-}
+  fontFamilies: [
+    'fontFamily',
+  ],
+  fontSizes: [
+    'fontSize',
+  ],
+  spacings: [
+    'margin',
+    'marginBottom',
+    'marginLeft',
+    'marginRight',
+    'marginTop',
+    'padding',
+    'paddingBottom',
+    'paddingLeft',
+    'paddingRight',
+    'paddingTop',
+  ],
+};
 
 const theme = createTheme({
   colors: {
@@ -671,7 +682,7 @@ const theme = createTheme({
       link: 'blue',
     },
   },
-  paddings: {
+  spacings: {
     s: 4,
     m: 8,
     l: 16,
@@ -721,7 +732,7 @@ When enabled, will support *CSS variables* features in the `renderer` methods:
 
 ###### `options.namespace` (`string`, optional, default: `''`)
 
-Prepends a namespace prefix to every rendered CSS classname and keyframe. Namespaces can only consist of `a-zA-Z0-9-_` and must begin with `a-zA-Z_`.
+Prepends a namespace prefix to every rendered CSS classname, keyframe, and variable. Namespaces can only consist of `a-z0-9-_` (lowercase alphanumerals) and must begin with `a-z_`.
 
 ###### `options.responsiveBreakpoints` (`Array<string>`, optional, default: `[]`)
 
@@ -753,7 +764,7 @@ Returns a *theme renderer* with methods to resolve and render *themed styles* to
 <details>
 <summary>Example</summary>
 
-Create and configure a theme renderer with:
+Create and configure a *theme renderer* with:
 
 ```js
 import {createThemeRenderer} from 'uinix-theme';
@@ -819,7 +830,7 @@ renderer.clear();
 
 ## Theme Specs
 
-The following are theme-specs usable by uinix-theme.
+The following are *theme-specs* usable by uinix-theme.
 - [`uinix-theme-spec`][uinix-theme-spec] — the default uinix-theme spec.
 - [`uinix-theme-spec-theme-ui`][uinix-theme-spec-theme-ui] — the [theme-ui] spec usable by uinix-theme.
 
@@ -827,31 +838,34 @@ The following are theme-specs usable by uinix-theme.
 <summary>Example</summary>
 
 ```js
-import {createTheme} from 'uinix-theme';
+import {createThemeRenderer} from 'uinix-theme';
 import themeSpec from 'uinix-theme-spec';
 
-const theme = createTheme({
-  colors: {
-    brand: {
-      primary: 'red',
-      link: 'blue',
+const renderer = createThemeRenderer({
+  theme: {
+    colors: {
+      brand: {
+        primary: 'red',
+        link: 'blue',
+      },
+    },
+    spacings: {
+      s: 4,
+      m: 8,
+      l: 16,
     },
   },
-  spacings: {
-    s: 4,
-    m: 8,
-    l: 16,
-  },
-}, themeSpec);
+  themeSpec,
+});
 
-console.log(theme);
+renderer.render();
 ```
 
 </details>
 
 ## Glossary
 
-The following terms are used throughout this documentation and are defined below.  We will reference the following objects throughout this section.
+The following terms used throughout this documentation are defined below.  We will reference the following example objects throughout this section.
 
 ```js
 const theme = {
@@ -885,7 +899,12 @@ const themeSpec = {
 
 ### Theme
 
-- ***Theme***: An object (e.g. `theme`) relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme property paths*.
+- ***Theme***: An object relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme property paths*.
+  <details>
+  <summary>Example</summary>
+
+  `theme` defined above is an example of a theme.
+  </details>
 - ***Theme property***: The keys of a *theme* that relates to their corresponding *CSS property* as defined in the *theme spec*.
   <details>
   <summary>Example</summary>
@@ -896,9 +915,9 @@ const themeSpec = {
   <details>
   <summary>Example</summary>
 
-  The `colors.brand.primary` and `spacings.m` would refer to the CSS values `'blue'` and `8` respectively based on `theme`.
+  The `'colors.brand.primary'` and `'spacings.m'` theme property paths would refer to the CSS values `'blue'` and `8` respectively based on `theme`.
   </details>
-- ***Theme spec***: An object relating *theme properties* with *CSS properties*.  It is used as a specification together with a *theme* to inform how *themed styles* should be resolved to CSS.
+- ***Theme spec***: An object relating *theme properties* with *CSS properties*.  It is used as a specification together with a *theme* to inform how *themed styles* should be resolved and rendered to CSS.
   <details>
     <summary>Example</summary>
 
@@ -942,11 +961,11 @@ const themeSpec = {
 
   </details>
 - ***Theme renderer***: A program that resolves *themed styles* based on the provided *theme* and *theme spec*, and renders the CSS to DOM.
-- ***Theme system***: A system of programs that support specifying the *theme spec*, creating and validating the relating *theme*, resolving and rendering *themed styles* to CSS.
+- ***Theme system***: A system of programs that supports specifying the *theme spec*, creating and validating the relating *theme*, resolving and rendering *themed styles* to CSS.
 
 ### Styles
 
-- ***Style***: A declaration to style HTML elements via CSS.  Authored in JS as *style objects* or *style rules*.
+- ***Style***: A declaration for styling HTML elements via CSS.  Authored in JS as *style objects* or *style rules*.
 The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide an example to highlight notable syntax and features.
   <details>
   <summary>Example</summary>
@@ -1000,7 +1019,7 @@ The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide a
     };
     ```
   </details>
-- ***Style rule***: A *style* represented as a JS function that returns a *style object*.  This is useful to represent style as a function or state.
+- ***Style rule***: A *style* represented as a JS function that returns a *style object*.  This is useful to represent style as a function of state.
   <details>
     <summary>Example</summary>
 
@@ -1020,7 +1039,7 @@ The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide a
     <summary>Example</summary>
 
     ```js
-    const globalStyles = {
+    const staticStyles = {
       '*': {
         boxSizing: 'border-box',
       },
@@ -1134,10 +1153,10 @@ The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide a
 
 uinix-theme is originally inspired by the ideas in [theme-ui], and evolves these ideas into framework-agnostic and fully configurable APIs, implemented via [fela].
 
-uinix-theme approaches theme systems with the following emphasis:
-- Fully-configurable: Allow consumers to own their own spec instead of providing an opinionated one.
-- Framework-agnostic: solve the domain problem in JS and not in specific frameworks.
-- Build-free: APIs are usable without the need for a build system (e.g. directly in browsers as plain JS).
+uinix-theme approaches theme systems with the following principles:
+- Fully-configurable: Enable consumers to own their own spec instead of providing an opinionated one.
+- Framework-agnostic: Solve the domain problem in JS and not in specific frameworks.
+- Build-free: APIs are usable without the need for a build system (e.g. directly usable in browsers as plain JS).
 - Update-free: APIs are intended to be stable, imparting confidence for both maintainers and consumers of the project.
 
 ### Version

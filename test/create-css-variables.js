@@ -44,14 +44,31 @@ test('create-css-variables', async (t) => {
               'xyzXYZ-_ .,0123789': 42,
             },
           },
-          {namespace: 'NAMESPACE.'},
+          {namespace: 'uinix'},
         ),
         {
-          '--namespace-a-b-c': '1px',
-          '--namespace-a-b-flat-key': 2,
-          '--namespace-a-xyzxyz-_---0123789': 42,
+          '--uinix-a-b-c': '1px',
+          '--uinix-a-b-flat-key': 2,
+          '--uinix-a-xyzxyz-_---0123789': 42,
         },
       );
     },
   );
+
+  await t.test('should throw if namespace does not match regexp)', () => {
+    assert.throws(() => {
+      createCssVariables(
+        {
+          a: {
+            b: {
+              c: '1px',
+              'flat.key': 2,
+            },
+            'xyzXYZ-_ .,0123789': 42,
+          },
+        },
+        {namespace: '0123 MUST MATCH: /^[a-z_][w-]*$/g'},
+      );
+    }, Error);
+  });
 });

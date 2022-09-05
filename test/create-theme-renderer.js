@@ -145,7 +145,7 @@ test('createThemeRenderer', async (t) => {
             {},
             {
               enableCssVariables: true,
-              namespace: 'uinix_',
+              namespace: 'uinix',
               theme: {
                 colors: {
                   brand: {
@@ -164,7 +164,7 @@ test('createThemeRenderer', async (t) => {
           ),
           [
             {
-              css: '--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              css: '--uinix-colors-brand-primary:red;--uinix-spacings-m:8px',
               selector: ':root',
               type: 'STATIC',
             },
@@ -186,7 +186,7 @@ test('createThemeRenderer', async (t) => {
             },
             {
               enableCssVariables: true,
-              namespace: 'uinix_',
+              namespace: 'uinix',
               theme: {
                 colors: {
                   brand: {
@@ -205,12 +205,12 @@ test('createThemeRenderer', async (t) => {
           ),
           [
             {
-              css: '--uinix_colors-brand-primary:red;--uinix_spacings-m:8px',
+              css: '--uinix-colors-brand-primary:red;--uinix-spacings-m:8px',
               selector: ':root',
               type: 'STATIC',
             },
             {
-              css: 'color:var(--uinix_colors-brand-primary);padding:var(--uinix_spacings-m)',
+              css: 'color:var(--uinix-colors-brand-primary);padding:var(--uinix-spacings-m)',
               selector: 'a',
               type: 'STATIC',
             },
@@ -227,7 +227,7 @@ test('createThemeRenderer', async (t) => {
             {
               ':root': {
                 '--custom-css-var': '8px',
-                '--uinix_colors-brand-primary': 'should-be-overwritten',
+                '--uinix-colors-brand-primary': 'should-be-overwritten',
               },
               a: {
                 color: 'red',
@@ -235,7 +235,7 @@ test('createThemeRenderer', async (t) => {
             },
             {
               enableCssVariables: true,
-              namespace: 'uinix_',
+              namespace: 'uinix',
               theme: {
                 colors: {
                   brand: {
@@ -254,7 +254,7 @@ test('createThemeRenderer', async (t) => {
           ),
           [
             {
-              css: '--uinix_colors-brand-primary:should-be-overwritten;--uinix_spacings-m:8px;--custom-css-var:8px',
+              css: '--uinix-colors-brand-primary:should-be-overwritten;--uinix-spacings-m:8px;--custom-css-var:8px',
               selector: ':root',
               type: 'STATIC',
             },
@@ -1172,17 +1172,17 @@ test('createThemeRenderer', async (t) => {
     });
 
     await t.test(
-      'should prepend the provided namespace before the rendered CSS classnames',
+      'should prepend the provided namespace (with trailing ) before the rendered CSS classnames',
       () => {
         const style = {
           color: 'blue',
           padding: '12px',
         };
-        const namespace = 'a-zA-Z0-9-_';
+        const namespace = 'uinix';
 
         assert.equal(
           createThemeRenderer({namespace}).renderStyle(style),
-          namespace + createThemeRenderer().renderStyle(style),
+          'uinix-' + createThemeRenderer().renderStyle(style),
         );
 
         assert.equal(
@@ -1193,7 +1193,7 @@ test('createThemeRenderer', async (t) => {
           createThemeRenderer({enableAtomicCss: true})
             .renderStyle(style)
             .split(' ')
-            .map((x) => namespace + x)
+            .map((x) => 'uinix-' + x)
             .join(' '),
         );
       },
@@ -1251,7 +1251,7 @@ test('createThemeRenderer', async (t) => {
             {},
             {
               enableCssVariables: true,
-              namespace: 'uinix_',
+              namespace: 'uinix',
               theme: {
                 colors: {
                   brand: {
@@ -1271,7 +1271,7 @@ test('createThemeRenderer', async (t) => {
           [
             {
               declaration:
-                'color:var(--uinix_colors-brand-primary);background:blue;margin:16px;padding:var(--uinix_spacings-m)',
+                'color:var(--uinix-colors-brand-primary);background:blue;margin:16px;padding:var(--uinix-spacings-m)',
               type: 'RULE',
             },
           ],
@@ -1292,7 +1292,7 @@ test('createThemeRenderer', async (t) => {
           {
             enableAtomicCss: true,
             enableCssVariables: true,
-            namespace: 'uinix_',
+            namespace: 'uinix',
             theme: {
               colors: {
                 brand: {
@@ -1311,7 +1311,7 @@ test('createThemeRenderer', async (t) => {
         ),
         [
           {
-            declaration: 'color:var(--uinix_colors-brand-primary)',
+            declaration: 'color:var(--uinix-colors-brand-primary)',
             type: 'RULE',
           },
           {
@@ -1323,7 +1323,7 @@ test('createThemeRenderer', async (t) => {
             type: 'RULE',
           },
           {
-            declaration: 'padding:var(--uinix_spacings-m)',
+            declaration: 'padding:var(--uinix-spacings-m)',
             type: 'RULE',
           },
         ],
@@ -1341,7 +1341,7 @@ test('createThemeRenderer', async (t) => {
             {},
             {
               enableCssVariables: true,
-              namespace: 'uinix_',
+              namespace: 'uinix',
               responsiveCssProperties: ['color'],
               responsiveBreakpoints: ['100px', '800px'],
               theme: {
@@ -1360,21 +1360,35 @@ test('createThemeRenderer', async (t) => {
           ),
           [
             {
-              declaration: 'color:var(--uinix_colors-brand-secondary)',
+              declaration: 'color:var(--uinix-colors-brand-secondary)',
               media: 'screen and (min-width: 100px)',
               type: 'RULE',
             },
             {
-              declaration: 'color:var(--uinix_colors-brand-tertiary)',
+              declaration: 'color:var(--uinix-colors-brand-tertiary)',
               media: 'screen and (min-width: 800px)',
               type: 'RULE',
             },
             {
-              declaration: 'color:var(--uinix_colors-brand-primary)',
+              declaration: 'color:var(--uinix-colors-brand-primary)',
               type: 'RULE',
             },
           ],
         );
+      },
+    );
+  });
+
+  // TODO: move configurable options tests here
+  await t.test('options', async (t) => {
+    await t.test(
+      'it should throw if options.namespace has invalid regexp',
+      () => {
+        assert.throws(() => {
+          createThemeRenderer({
+            namespace: '0123 MUST MATCH: /^[a-z_][w-]*$/g',
+          });
+        }, Error);
       },
     );
   });
