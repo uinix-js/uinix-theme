@@ -583,6 +583,12 @@ See *theme* defined in [§ Glossary](#glossary).
 
 Prepends a namespace prefix to every rendered CSS variable. Namespaces can only consist of `a-z0-9-_` (lowercase alphanumerals) and must begin with `a-z_`.
 
+###### `options.themeSpec` (`ThemeSpec`, optional, default: `{}`)
+
+See *theme spec* defined in [§ Glossary](#glossary).
+
+By default, one does not typically need to provide a theme spec to create themed CSS variables.  However without a theme spec, `createCssVariables` will not have enough information to determine a few CSS property assumptions.  For example, `'px'`-based CSS properties assigned numeric values may not correctly be resolved to actual `px` values.  Supply a theme spec in such situations.
+
 ##### Returns
 
 ###### `cssVariables` (`Object`)
@@ -609,7 +615,12 @@ const theme = {
   },
 };
 
-const cssVariables = createCssVariables(theme, {namespace: 'uinix'});
+const themeSpec = {
+  colors: ['color'],
+  spacings: ['margin', 'padding'],
+};
+
+const cssVariables = createCssVariables(theme, {namespace: 'uinix', themeSpec});
 ```
 
 Yields the following CSS variables.
@@ -617,9 +628,10 @@ Yields the following CSS variables.
 ```js
 const cssVariables = {
   '--uinix-colors-brand-primary': 'blue',
-  '--uinix-spacings-s': 4,
-  '--uinix-spacings-m': 8,
-  '--uinix-spacings-l': 16,
+  // resolved to px values because a theme-spec is provided
+  '--uinix-spacings-s': '4px',
+  '--uinix-spacings-m': '8px',
+  '--uinix-spacings-l': '16px',
 };
 ```
 

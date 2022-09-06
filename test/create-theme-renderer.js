@@ -115,21 +115,29 @@ test('createThemeRenderer', async (t) => {
                   secondary: 'rgba(0, 0, 0, 0.2)',
                 },
               },
+              lineHeights: {
+                m: 2,
+              },
               spacings: {
                 s: 4,
                 m: 8,
                 l: 16,
               },
+              zIndices: {
+                forward: 1,
+              },
             },
             themeSpec: {
               colors: ['color'],
+              lineHeights: ['lineHeight'],
               spacings: ['padding'],
+              zIndices: ['zIndex'],
             },
           },
         ),
         [
           {
-            css: '--colors-brand-primary:red;--colors-brand-secondary:rgba(0, 0, 0, 0.2);--spacings-s:4px;--spacings-m:8px;--spacings-l:16px',
+            css: '--colors-brand-primary:red;--colors-brand-secondary:rgba(0, 0, 0, 0.2);--lineheights-m:2;--spacings-s:4px;--spacings-m:8px;--spacings-l:16px;--zindices-forward:1',
             selector: ':root',
             type: 'STATIC',
           },

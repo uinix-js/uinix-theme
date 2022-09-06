@@ -71,4 +71,44 @@ test('create-css-variables', async (t) => {
       );
     }, Error);
   });
+
+  await t.test(
+    'should transform theme into an object of css variables and resolve CSS units based on the themeSpec',
+    () => {
+      assert.deepEqual(
+        createCssVariables(
+          {
+            colors: {
+              brand: {
+                primary: 'red',
+              },
+            },
+            lineHeights: {
+              m: 2,
+            },
+            spacings: {
+              m: 8,
+            },
+            zIndices: {
+              m: 1,
+            },
+          },
+          {
+            themeSpec: {
+              colors: ['colors'],
+              lineHeights: ['lineHeight'],
+              spacings: ['margin', 'padding'],
+              zIndices: ['zIndex'],
+            },
+          },
+        ),
+        {
+          '--colors-brand-primary': 'red',
+          '--lineheights-m': 2,
+          '--spacings-m': '8px',
+          '--zindices-m': 1,
+        },
+      );
+    },
+  );
 });
