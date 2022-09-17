@@ -144,7 +144,7 @@ const themeSpec = {
 
 ### Create a theme
 
-A *theme* is an object relating *theme properties* with *CSS values* (can be arbitrarily nested). It provides a way to define and reference CSS values via *theme property paths*.
+A *theme* is an object relating *theme properties* with *CSS values* (can be arbitrarily nested). It provides a way to define and reference CSS values via *theme values*.
 
 Create a theme using a *theme spec* with `createTheme`:
 
@@ -216,7 +216,7 @@ Render a *themed style* object with `renderer.renderStyle`:
 
 ```js
 const style = {
-  color: 'brand.primary', // theme property path informs that the value is theme-driven
+  color: 'brand.primary', // theme values are authored in JSONPath syntax based on their definitions in the theme.
   fill: 'rgba(0, 0, 0, 0.5)', // CSS values are also valid
   padding: 'm',
   ':hover': {
@@ -571,7 +571,7 @@ const combinedStyleRule = props => ({
 
 ### `createCssVariables(theme?, options?) => cssVariables`
 
-Creates an object of *CSS variables* using the provided *theme*.  CSS variables are named based on the *theme property paths* of the provided theme.
+Creates an object of *CSS variables* using the provided *theme*.  CSS variables are named based on the *theme values* defined in the provided theme.
 
 ##### Parameters
 
@@ -911,7 +911,7 @@ const themeSpec = {
 
 ### Theme
 
-- ***Theme***: An object relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme property paths*.
+- ***Theme***: An object relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme values*.
   <details>
   <summary>Example</summary>
 
@@ -923,11 +923,11 @@ const themeSpec = {
 
   The `colors` and `spacings` are theme properties based on `theme`.
   </details>
-- ***Theme property path***: [JSONPath]-like syntax to refer to *CSS values* in a *theme*.
+- ***Theme value***: [JSONPath]-like syntax to refer to *CSS values* in a *theme*.
   <details>
   <summary>Example</summary>
 
-  The `'colors.brand.primary'` and `'spacings.m'` theme property paths would refer to the CSS values `'blue'` and `8` respectively based on `theme`.
+  The `'colors.brand.primary'` and `'spacings.m'` theme values would refer to the CSS values `'blue'` and `8` respectively based on how they are defined in `theme`.
   </details>
 - ***Theme spec***: An object relating *theme properties* with *CSS properties*.  It is used as a specification together with a *theme* to inform how *themed styles* should be resolved and rendered to CSS.
   <details>
@@ -937,7 +937,7 @@ const themeSpec = {
     - the `colors` *theme property* relates to the `backgroundColor`, `color` *CSS properties*.
     - the `spacings` *theme property* relates to the `margin`, `marginBottom`, `marginLeft`, `marginRight`, `marginTop` *CSS properties*.
   </details>
-- ***Themed style***: A *style* that is specified with *theme property paths* as values (instead of *CSS values*).  A themed style is only meaningful in relation to a *theme* and *theme spec*, as the following example demonstrates.
+- ***Themed style***: A *style* that is specified with *theme values* instead of *CSS values* (CSS values can still be specified).  A themed style is only meaningful in relation to a *theme* and *theme spec*, as the following example demonstrates.
   <details>
     <summary>Example</summary>
 
@@ -965,11 +965,11 @@ const themeSpec = {
     }
     ```
 
-    - `color` is resolved to the *CSS value* `'blue'` by checking that the `color` *CSS property* is registered in `themeSpec` (under the `colors` *theme property*) and that the `'brand.primary'` *theme property path* is resolvable under `theme.colors`.
-    - `margin` is resolved to the *CSS value* `'8px'` by checking that the `margin` *CSS property* is registered in `themeSpec` (under the `spacings` *theme property*) and that the `'m'` *theme property path* is resolvable under `theme.spacings`.
+    - `color` is resolved to the *CSS value* `'blue'` by checking that the `color` *CSS property* is registered in `themeSpec` (under the `colors` *theme property*) and that the `'brand.primary'` *theme value* is resolvable under `theme.colors`.
+    - `margin` is resolved to the *CSS value* `'8px'` by checking that the `margin` *CSS property* is registered in `themeSpec` (under the `spacings` *theme property*) and that the `'m'` *theme value* is resolvable under `theme.spacings`.
     - `fill` and `top` simply use their specified *CSS values* as fallback values since they cannot be resolved based on the `theme` and `themeSpec`.
-    - `backgroundColor` is unresolved because while it is a *CSS property* registered in `themeSpec`, the `'not.a.valid.path'` *theme property path* is not resolvable under `theme.colors`.
-    - `padding` is unresolved because it is not a *CSS property* registered in `themeSpec` despite having a valid *theme property path*.
+    - `backgroundColor` is unresolved because while it is a *CSS property* registered in `themeSpec`, the `'not.a.valid.path'` *theme value* is not resolvable under `theme.colors`.
+    - `padding` is unresolved because it is not a *CSS property* registered in `themeSpec` despite having a valid *theme value*.
 
   </details>
 - ***Theme renderer***: A program that resolves *themed styles* based on the provided *theme* and *theme spec*, and renders the CSS to DOM.
