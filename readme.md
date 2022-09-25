@@ -40,12 +40,12 @@ To further explore uinix-theme, visit the [Theme Playground] for interactive dem
 - [API](#api)
   - [`combineStyles(styles) => styleRule`](#combinestylesstyles--stylerule)
   - [`createCssVariables(theme?, options?) => cssVariables`](#createcssvariablestheme-options--cssvariables)
-  - [`createTheme(theme?, themeSpec?) => theme`](#createthemetheme-themespec--theme)
   - [`createThemeRenderer(options?) => renderer`](#createthemerendereroptions--renderer)
 - [Theme specs](#theme-specs)
 - [Glossary](#glossary)
 - [Project](#project)
   - [Origin](#origin)
+  - [Types](#types)
   - [Version](#version)
   - [Contribute](#contribute)
   - [Related](#related)
@@ -146,12 +146,8 @@ const themeSpec = {
 
 A *theme* is an object relating *theme properties* with *CSS values* (can be arbitrarily nested). It provides a way to define and reference CSS values via *theme values*.
 
-Create a theme using a *theme spec* with `createTheme`:
-
 ```js
-import {createTheme} from 'uinix-theme';
-
-const theme = createTheme({
+const theme = {
   colors: {
     brand: { // can be arbitrarily nested for organization.
       primary: 'red',
@@ -163,31 +159,15 @@ const theme = createTheme({
     m: 8,
     l: 16,
   },
-  unsupportedThemeProperty: {}
-}, themeSpec);
-
-console.log(theme);
-```
-
-Yields a compliant theme based on the provided theme spec:
-
-```js
-const theme = {
-  colors: {
-    brand: {
-      primary: 'red',
-      link: 'blue',
-    },
-  },
-  margins: {}, // every theme property in the theme spec is materialized if not specified.
-  paddings: {
-    s: 4,
-    m: 8,
-    l: 16,
-  },
-  // unsupported theme properties not whitelisted in the theme spec are dropped.
 };
 ```
+
+The following *theme values* (authored as [JSONPath] syntax relative to the provided *theme*) resolve to their respective assigned *CSS values*.
+- `colors.brand.primary`: `'red'`
+- `colors.brand.link`: `'blue'`
+- `paddings.s`: `4`
+- `paddings.m`: `8`
+- `paddings.l`: `16`
 
 ### Create a theme renderer
 
@@ -408,11 +388,11 @@ Yields the following rendered atomic CSS classes:
 }
 ```
 
-> **Note**: We recommend enabling atomic CSS in production as a scalable solution to share and reuse CSS class definitions across HTML elements. Disabling atomic styles in development is recommended to improve debugging experience.
+> **Note**: We recommend enabling atomic CSS in production as a scalable solution to share and reuse CSS class definitions across HTML elements. Disabling atomic styles in development is recommended to improve development experience.
 
 ### Configure and render themed CSS variables
 
-If you prefer to work with *CSS variables* and would like to integrate CSS workstreams with uinix-theme, you can configure rendering the entire *theme* as CSS variables in the global style sheet.
+If you prefer to work with *CSS variables* and would like to integrate CSS workstreams with uinix-theme, you can configure rendering the entire *theme* as CSS variables into the global style sheet.
 
 ```js
 import {createThemeRenderer} from 'uinix-theme';
@@ -516,13 +496,14 @@ Yields the following rendered CSS
 
 ## API
 
-`uinix-theme` exports the following identifiers:
+uinix-theme exports the following identifiers:
 - `combineStyles`
 - `createCssVariables`
-- `createTheme`
 - `createThemeRenderer`
 
 There are no default exports.
+
+APIs are explorable via [JSDoc]-based [Typescript] typings accompanying the source code.
 
 Please refer to the [§ Glossary](#glossary) for definitions of *italicized terms* referenced throughout this document.
 
@@ -637,96 +618,6 @@ const cssVariables = {
 
 </details>
 
-### `createTheme(theme?, themeSpec?) => theme`
-
-Creates a validated theme object based on the provided *theme* and *theme spec*.  *Theme properties* not specified on the theme spec are considered invalid and are not included in the returned object.
-
-##### Parameters
-
-###### `theme` (`Theme`, optional, default: `{}`)
-
-See *theme* defined in [§ Glossary](#glossary).
-
-###### `themeSpec` (`ThemeSpec`, optional, default: `{}`)
-
-See *theme spec* defined in [§ Glossary](#glossary).
-
-##### Returns
-
-###### `theme` (`Theme`)
-A validated theme object based on the provided theme spec.
-
-<details>
-<summary>Example</summary>
-
-```js
-import {createTheme} from 'uinix-theme';
-
-const themeSpec = {
-  colors: [
-    'backgroundColor',
-    'color'
-  ],
-  fontFamilies: [
-    'fontFamily',
-  ],
-  fontSizes: [
-    'fontSize',
-  ],
-  spacings: [
-    'margin',
-    'marginBottom',
-    'marginLeft',
-    'marginRight',
-    'marginTop',
-    'padding',
-    'paddingBottom',
-    'paddingLeft',
-    'paddingRight',
-    'paddingTop',
-  ],
-};
-
-const theme = createTheme({
-  colors: {
-    brand: {
-      primary: 'red',
-      link: 'blue',
-    },
-  },
-  spacings: {
-    s: 4,
-    m: 8,
-    l: 16,
-  },
-  unsupportedThemeProperty: {}
-}, themeSpec);
-
-console.log(theme);
-```
-
-Yields the following validated theme:
-
-```js
-const theme = {
-  colors: {
-    brand: {
-      primary: 'red',
-      link: 'blue',
-    },
-  },
-  fontFamilies: {}, // materialized from themeSpec
-  fontSizes: {}, // materialized from themeSpec
-  spacings: {
-    s: 4,
-    m: 8,
-    l: 16,
-  },
-  // unsupported theme properties are dropped
-}
-```
-</details>
-
 ### `createThemeRenderer(options?) => renderer`
 
 Creates a theme renderer to resolve *themed styles* based on the provided *theme* and *theme spec*, and render the resolved styles to the DOM.
@@ -758,7 +649,7 @@ Whitelist the corresponding responsive *CSS properties* to be responsive-aware.
 
 See *theme* defined in [§ Glossary](#glossary).
 
-###### `options.theme` (`Theme`, optional, default: `createTheme()`)
+###### `options.theme` (`Theme`, optional, default: `{}`)
 
 See *theme spec* defined in [§ Glossary](#glossary).
 
@@ -1171,9 +1062,15 @@ uinix-theme approaches theme systems with the following principles:
 - Build-free: APIs are usable without the need for a build system (e.g. directly usable in browsers as plain JS).
 - Update-free: APIs are intended to be stable, imparting confidence for both maintainers and consumers of the project.
 
+## Types
+
+uinix-theme ships with [Typescript] declarations, compiled and emitted when installed. The source code is pure Javascript.
+
 ### Version
 
 uinix-theme adheres to [semver] starting at 1.0.0.
+
+**Note:** uinix-theme is a *JS-first* project.  [Typescript] types are provided as a supplementary convenience for the TS community.  Changes in typings will always be treated as [semver] fixes.
 
 ### Contribute
 
@@ -1228,3 +1125,4 @@ Install dependencies with `npm i` and run tests with `npm test`.  You can also r
 [npm]: https://docs.npmjs.com/cli/v8/commands/npm-install
 [semver]: https://semver.org/
 [theme-ui]: https://github.com/system-ui/theme-ui
+[typescript]: https://github.com/microsoft/TypeScript
