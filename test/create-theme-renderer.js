@@ -5,11 +5,11 @@ import {createThemeRenderer} from '../index.js';
 import {resolveRenderGlobalStyles, resolveRenderStyle} from './util.js';
 
 test('createThemeRenderer', async (t) => {
-  await t.test('renderer.render', (t) => {
+  await t.test('renderer.load', (t) => {
     /** Untested assertion rendering to DOM via fela-dom (v11) */
     t.test('should run the render method', () => {
       const renderer = createThemeRenderer();
-      assert.throws(() => renderer.render());
+      assert.throws(() => renderer.load());
     });
   });
 

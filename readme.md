@@ -204,10 +204,10 @@ const renderer = createThemeRenderer({
 });
 ```
 
-Initialize the theme renderer in a single entry point in your code to render CSS to the DOM.
+Initialize and load the theme renderer in a single entry point in your code to render CSS to the DOM.
 
 ```js
-renderer.render();
+renderer.load();
 ```
 
 ### Render themed styles
@@ -375,7 +375,7 @@ const renderer = createThemeRenderer({
   themeSpec,
 });
 
-renderer.render();
+renderer.load();
 
 const style1 = {
   color: 'brand.primary';
@@ -423,7 +423,7 @@ const renderer = createThemeRenderer({
   themeSpec,
 });
 
-renderer.render();
+renderer.load();
 
 const globalStyles = {...}; // your other global styles
 
@@ -768,10 +768,10 @@ See *theme spec* defined in [§ Glossary](#glossary).
 
 Returns a *theme renderer* with methods to resolve and render *themed styles* to the DOM.
 
-- `renderer.clear()`: Clears and removes all rendered CSS.
-- `renderer.render()`: Initializes the renderer.
+- `renderer.load()`: Initializes and loads the renderer.
 - `renderer.renderStyle(style, props?)`: Resolves and renders the provided *style object* or *style rule*).  Accepts optional *style props*.
 - `renderer.renderGlobalStyles(style)`: Resolves and renders the provided *global styles* object.
+- `renderer.unload()`: Unloads and removes all rendered CSS.
 
 <details>
 <summary>Example</summary>
@@ -799,7 +799,7 @@ const renderer = createThemeRenderer({
 Initialize the renderer in a single entry point in your code with:
 
 ```js
-renderer.render();
+renderer.load();
 ```
 
 Render *global styles* with:
@@ -833,10 +833,10 @@ renderer.renderStyle(styleObject);
 renderer.renderStyle(styleRule, {isPadded: true});
 ```
 
-Clear all rendered styles with:
+Unload and clear all rendered styles with:
 
 ```js
-renderer.clear();
+renderer.unload();
 ```
 </details>
 
@@ -870,7 +870,7 @@ const renderer = createThemeRenderer({
   themeSpec,
 });
 
-renderer.render();
+renderer.load();
 ```
 
 </details>
