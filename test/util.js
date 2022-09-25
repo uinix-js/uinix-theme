@@ -2,7 +2,7 @@ import {filterEntries} from 'uinix-fp';
 
 import {createThemeRenderer} from '../index.js';
 
-export const resolveRenderStaticStyles = (staticStyles, options = {}) => {
+export const resolveRenderGlobalStyles = (globalStyles, options = {}) => {
   const renderer = createThemeRenderer(options);
 
   const actual = [];
@@ -15,7 +15,7 @@ export const resolveRenderStaticStyles = (staticStyles, options = {}) => {
   };
 
   const subscription = renderer._subscribe(listener);
-  renderer.renderStaticStyles(staticStyles);
+  renderer.renderGlobalStyles(globalStyles);
   subscription.unsubscribe();
 
   return actual;

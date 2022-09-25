@@ -32,7 +32,7 @@ To further explore uinix-theme, visit the [Theme Playground] for interactive dem
   - [Create a theme](#create-a-theme)
   - [Create a theme renderer](#create-a-theme-renderer)
   - [Render themed styles](#render-themed-styles)
-  - [Render themed static styles](#render-themed-static-styles)
+  - [Render themed global styles](#render-themed-global-styles)
   - [Render themed CSS keyframes](#render-themed-css-keyframes)
   - [Configure and render themed atomic CSS](#configure-and-render-themed-atomic-css)
   - [Configure and render themed CSS variables](#configure-and-render-themed-css-variables)
@@ -269,12 +269,12 @@ Yields the following rendered CSS:
 
 > **Note:** Please refer to the examples of *style* and *themed style* in the [§ Glossary](#glossary) for details on authoring CSS-in-JS styles and how the themed styles are resolved by the *theme renderer* using the provided *theme* and *theme spec*.
 
-### Render themed static styles
+### Render themed global styles
 
-You can render themed *static styles* to the global CSS styles with `renderer.renderStaticStyles`:
+You can render themed *global styles* with `renderer.renderGlobalStyles`:
 
 ```js
-const style = {
+const globalStyles = {
   body: {
     color: 'brand.primary',
     padding: 'm',
@@ -288,7 +288,7 @@ const style = {
   },
 };
 
-renderer.renderStaticStyles(style);
+renderer.renderGlobalStyles(globalStyles);
 ```
 
 Yields the following global CSS styles:
@@ -425,9 +425,9 @@ const renderer = createThemeRenderer({
 
 renderer.render();
 
-const staticStyles = {...}; // your other global styles
+const globalStyles = {...}; // your other global styles
 
-renderer.renderStaticStyles(staticStyles);
+renderer.renderGlobalStyles(globalStyles);
 ```
 
 Yields the following rendered global CSS:
@@ -739,7 +739,7 @@ Enables rendering styles as *atomic CSS*.
 ###### `options.enableCssVariables` (`boolean`, optional, default: `false`)
 
 When enabled, will support *CSS variables* features in the `renderer` methods:
-- `renderer.renderStaticStyles` will now render the `theme` as *CSS variables* under the `:root` pseudo class.
+- `renderer.renderGlobalStyles` will now render the `theme` as *CSS variables* under the `:root` pseudo class.
 - `renderer.renderStyle` will now resolve *themed styles* into its corresponding *CSS variables*.
 
 ###### `options.namespace` (`string`, optional, default: `''`)
@@ -771,7 +771,7 @@ Returns a *theme renderer* with methods to resolve and render *themed styles* to
 - `renderer.clear()`: Clears and removes all rendered CSS.
 - `renderer.render()`: Initializes the renderer.
 - `renderer.renderStyle(style, props?)`: Resolves and renders the provided *style object* or *style rule*).  Accepts optional *style props*.
-- `renderer.renderStaticStyles(style)`: Resolves and renders the provided *static style* object.
+- `renderer.renderGlobalStyles(style)`: Resolves and renders the provided *global styles* object.
 
 <details>
 <summary>Example</summary>
@@ -802,16 +802,16 @@ Initialize the renderer in a single entry point in your code with:
 renderer.render();
 ```
 
-Render *static styles* to the global CSS with:
+Render *global styles* with:
 
 ```js
-const staticStyles = {
+const globalStyles = {
   'body': {...}
   '*': {...},
   '.vendor-classname': {...}
 };
 
-renderer.renderStaticStyles(staticStyles);
+renderer.renderGlobalStyles(globalStyles);
 ```
 
 Render either *style objects* or *style rules* with:
@@ -1046,12 +1046,12 @@ The CSS-in-JS syntax is fairly ubiquitous across CSS frameworks and we provide a
     ```
   </details>
 - ***Style props***: an object used as an argument for a *style rule*.
-- ***Static style***: refers to static *style objects* that are usually defined once and rendered to the global style sheet.
+- ***Global styles***: refers to global *style objects* that are usually defined once and rendered to the global style sheet.
   <details>
     <summary>Example</summary>
 
     ```js
-    const staticStyles = {
+    const globalStyles = {
       '*': {
         boxSizing: 'border-box',
       },

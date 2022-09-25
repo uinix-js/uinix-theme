@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import test from 'node:test';
 
 import {createThemeRenderer} from '../index.js';
-import {resolveRenderStaticStyles, resolveRenderStyle} from './util.js';
+import {resolveRenderGlobalStyles, resolveRenderStyle} from './util.js';
 
 test('createThemeRenderer', async (t) => {
   await t.test('renderer.render', (t) => {
@@ -13,10 +13,10 @@ test('createThemeRenderer', async (t) => {
     });
   });
 
-  await t.test('renderer.renderStaticStyles', async (t) => {
-    await t.test('should render static style', () => {
+  await t.test('renderer.renderGlobalStyles', async (t) => {
+    await t.test('should render global styles', () => {
       assert.deepEqual(
-        resolveRenderStaticStyles({
+        resolveRenderGlobalStyles({
           html: {
             color: 'white',
           },
@@ -47,9 +47,9 @@ test('createThemeRenderer', async (t) => {
       );
     });
 
-    await t.test('should render themed static style', () => {
+    await t.test('should render themed global styles', () => {
       assert.deepEqual(
-        resolveRenderStaticStyles(
+        resolveRenderGlobalStyles(
           {
             'a:hover': {
               color: 'brand.primary',
@@ -79,9 +79,9 @@ test('createThemeRenderer', async (t) => {
     });
 
     // Inverted when https://github.com/robinweser/fela/issues/876 is resolved
-    await t.test('should NOT render responsive static style', () => {
+    await t.test('should NOT render responsive global styles', () => {
       assert.deepEqual(
-        resolveRenderStaticStyles(
+        resolveRenderGlobalStyles(
           {
             'a:hover': {
               color: ['red', 'green', 'blue'],
@@ -104,7 +104,7 @@ test('createThemeRenderer', async (t) => {
 
     await t.test('should render theme as css variables under `:root`', () => {
       assert.deepEqual(
-        resolveRenderStaticStyles(
+        resolveRenderGlobalStyles(
           {},
           {
             enableCssVariables: true,
@@ -149,7 +149,7 @@ test('createThemeRenderer', async (t) => {
       'should render theme as css variables under `:root` prefixed with provided namespace',
       () => {
         assert.deepEqual(
-          resolveRenderStaticStyles(
+          resolveRenderGlobalStyles(
             {},
             {
               enableCssVariables: true,
@@ -182,10 +182,10 @@ test('createThemeRenderer', async (t) => {
     );
 
     await t.test(
-      'should evaluate static styles as css variables if enabled',
+      'should evaluate global styles as css variables if enabled',
       () => {
         assert.deepEqual(
-          resolveRenderStaticStyles(
+          resolveRenderGlobalStyles(
             {
               a: {
                 color: 'brand.primary',
@@ -228,10 +228,10 @@ test('createThemeRenderer', async (t) => {
     );
 
     await t.test(
-      'should merge css variables under :root with other static styles',
+      'should merge css variables under :root with other global styles',
       () => {
         assert.deepEqual(
-          resolveRenderStaticStyles(
+          resolveRenderGlobalStyles(
             {
               ':root': {
                 '--custom-css-var': '8px',
