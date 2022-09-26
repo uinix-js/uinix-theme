@@ -1387,7 +1387,6 @@ test('createThemeRenderer', async (t) => {
     );
   });
 
-  // TODO: move configurable options tests here
   await t.test('options', async (t) => {
     await t.test(
       'it should throw if options.namespace has invalid regexp',

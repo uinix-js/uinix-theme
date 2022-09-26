@@ -144,12 +144,12 @@ const themeSpec = {
 
 ### Create a theme
 
-A *theme* is an object relating *theme properties* with *CSS values* (can be arbitrarily nested). It provides a way to define and reference CSS values via *theme values*.
+A *theme* is an (optionally recursive) object relating *theme properties* with *CSS values*. It provides a way to define and reference CSS values via *theme values*.
 
 ```js
 const theme = {
   colors: {
-    brand: { // can be arbitrarily nested for organization.
+    brand: { // can be recursively specified
       primary: 'red',
       link: 'blue',
     },
@@ -309,7 +309,7 @@ const theme = {
       '100%': {opacity: '0'},
     },
     spin: {
-      circle: { // can be arbitrarily nested
+      circle: { // can be recursively specified
         from: {
           transform: 'rotate(0deg)',
         },
@@ -802,7 +802,7 @@ const themeSpec = {
 
 ### Theme
 
-- ***Theme***: An object relating *theme properties* with *CSS values* (can be arbitrarily nested).  Provides a way to define and reference CSS values via *theme values*.
+- ***Theme***: An (optionally recursive) object relating *theme properties* with *CSS values*.  Provides a way to define and reference CSS values via *theme values*.
   <details>
   <summary>Example</summary>
 
