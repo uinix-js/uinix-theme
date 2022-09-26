@@ -48,8 +48,8 @@
   },
   "scripts": {
     "build": "npm run clean && tsc && type-coverage",
-    "clean": "npm run clear:typings && npm run clear:typings",
-    "clear:typings": "rimraf index.d.ts {lib,test}/**/*.d.ts",
+    "clean": "npm run clean:typings && npm run clean:typings",
+    "clean:typings": "rimraf index.d.ts {lib,test}/**/*.d.ts",
     "lint": "xo --fix",
     "test-coverage": "c8 --check-coverage --all --100 --reporter lcov node --test test/index.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
@@ -66,8 +66,7 @@
     "atLeast": 100,
     "detail": true,
     "ignoreFiles": "test/*.js",
-    "strict": true,
-    "suppressError": true
+    "strict": true
   },
   "xo": {
     "esnext": false,
