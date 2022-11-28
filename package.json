@@ -1,6 +1,6 @@
 {
   "name": "uinix-theme",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Fully configurable framework-agnostic theme system (spec, theme, renderer, themed styles/keyframes/CSS variables) for building UIs.  Your theme your rules 🤘.",
   "license": "MIT",
   "keywords": [
