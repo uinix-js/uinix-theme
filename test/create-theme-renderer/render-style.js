@@ -562,7 +562,32 @@ test('renderer[renderStyle] (theme behaviors)', (t) => {
         type: 'RULE',
       },
     ],
-    'should pass value through if no theme spec is provided',
+    'should pass value through if no theme is provided',
+  );
+
+  t.deepEqual(
+    resolveRenderStyle({
+      style: {
+        color: 'brand',
+      },
+      options: {
+        theme: {
+          spacings: {
+            m: '16px',
+          },
+        },
+        themeSpec: {
+          colors: ['color'],
+        },
+      },
+    }),
+    [
+      {
+        declaration: 'color:brand',
+        type: 'RULE',
+      },
+    ],
+    'should pass value through if invalid theme is provided (against a given theme spec)',
   );
 
   t.deepEqual(
